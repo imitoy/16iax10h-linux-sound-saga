@@ -28,7 +28,7 @@ I do still use AI for brainstorming or assistance with bugs; for example, Claude
 ---
 
 ## Quick start
-***Patch compatibility:*** this section assumes you are a Fedora Linux user who wishes to install the patched kernel prepackaged as an RPM. If you use a different Linux distro or prefer to compile your own kernel RPMs, please check the following sections for instructions on how to patch the Linux kernel yourself.
+***Patch compatibility:*** this section assumes you are a Fedora Linux user who wishes to install the patched kernel prepackaged as an RPM. If you use a different Linux distro or prefer to compile your own kernel RPMs, please check the FAQ for instructions on how to patch the Linux kernel yourself.
 
 ### Automated Installation
 The easiest way to install the patched kernel is to run the automated wizard:
