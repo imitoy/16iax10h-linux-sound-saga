@@ -153,7 +153,7 @@ CONFIG_SND_SOC_AW88399=m
 ```
 config parameters as for the Intel models are needed, but not the Intel-specific ones; use the AMD specific ones instead. The ones used by Fedora are shown in the table below; however, given that a) not all of them are actually used, b) you also need other audio related parameters (e.g. the alc269 codec), and c) most distros build their kernels with ever config already included to maximize broad hardware compatibility, I recommend you just use the same parameters used to compile the kernel you already have. In practice, this means going to `/boot`, copying the appropriate `config-<kernel version>` file, and appending the `CONFIG_SND_HDA_SCODEC_AW88399=m` and `CONFIG_SND_HDA_SCODEC_AW88399_I2C=m` parameters (`CONFIG_SND_SOC_AW88399=m` will realistically already be there, as well as everything else you need for both the Intel and AMD models).
 <details>
-<summary>AMD audio config parameters</summary>
+<summary>AMD audio config parameters (click here)</summary>
 
 ```bash
 CONFIG_SND_SOC_AMD_ACP=m
@@ -198,7 +198,9 @@ CONFIG_SND_SOC_AMD_PS_MACH=m
 
 </details>
 
-If you wish to compile your own kernel under Fedora Linux, I recommend using my [Fedora specific self-compile guide](docs/self_compile.md) over the original, as it will make the process much easier: thanks to `fedpkg`, there is no need to manually pick kernel parameters, setup NVIDIA drivers, generate the initramfs, update the grub menu, or copy the files needed to install the patched kernel. Online you can find multiple ways to compile the Linux kernel under Fedora (many based on older methods); I recommend my approach because it's the most up to date, high level, and noob-friendly, as well as being based on the latest official method recommended by the Fedora docs themselves (see the guide for fedora docs sources).
+If you wish to compile your own kernel under Fedora Linux, I recommend using my [Fedora specific self-compile guide](docs/self_compile.md) over the original, as it will make the process much easier: thanks to `fedpkg`, there is no need to manually pick kernel parameters, setup NVIDIA drivers, generate the initramfs, update the grub menu, or copy the files needed to install the patched kernel.
+
+There exist multiple ways to compile the Linux kernel under Fedora (with some guides you can find online based on older methods); I recommend the approach detailed in my guide because it's the most up to date, high level, and beginner-friendly, as well as being based on the latest official method recommended by the Fedora docs themselves (see the guide for Fedora docs sources).
 
 ### Will this overwrite the stock kernel?
 No. The original kernel remains installed unless you manually remove it, *which you never should*; it's recommended to always keep a backup. You can select which kernel to boot from the GRUB menu (quickly press ESC repeatedly during boot).
