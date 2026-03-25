@@ -40,7 +40,8 @@ This script will guide you through installing the required firmware, setting up 
 
 After the script is done, reboot; your system should automatically boot the patched kernel. You can confirm this by running `uname -r`; if you see a string containing the word `legion`, you're good to go. Otherwise, reboot your computer and repeatedly press the ESC key during boot to access the grub menu. You'll find an entry labeled `<...>.legion<...>.fc<...>.x86_64`; select it with the up/down keys, then press enter.
 
-***Post-install:*** after you successfully installed the patched kernel, go to your OS sound settings, and ensure the *Analog stereo duplex* sound profile is selected (any other will disable the mic or some/all speakers).
+***Post-install:*** after you successfully installed the patched kernel, go to your OS sound settings, and ensure the ***Analog stereo duplex*** sound profile is selected (any other will disable the mic or some/all speakers). For example, here's how to do this in KDE Plasma:
+![I apologize for being too lazy to change my OS language to English.](docs/kde_analog_stereo_duplex_sound_profile.png)
 
 If you read [the original guide](https://github.com/nadimkobeissi/16iax10h-linux-sound-saga), you'll see its post-install instructions involve setting a certain kernel boot parameter and copying some `ucm2` files. This is *not* needed here (and won't work on the AMD model anyway)! I take a different approach with my patch, aimed at making it work out of the box. The only required post install step is ensuring you select the correct profile, as stated above.
 
