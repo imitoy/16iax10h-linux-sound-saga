@@ -33,7 +33,7 @@ jobs:
             - name: Install build tools
               run: |
                 dnf install -y \
-                    fedpkg koji git ccache
+                    fedpkg koji git
             - name: Obtain kernel source (fedpkg/koji)
               run: |
                 if [ -n "${KERNEL_VERSION}" ]; then
@@ -90,7 +90,7 @@ jobs:
             - name: Build the kernel RPMs
               run: |
                 cd kernel
-                fedpkg local --without debug --with ccache
+                fedpkg local --without debug
             - name: Collect relevant RPMs into release_rpms/
               run: |
                 mkdir -p release_rpms
