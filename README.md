@@ -140,7 +140,7 @@ While easyeffects is running, you will see devices called "Easy Effects Sink" an
 Also, if you want to make the speakers a bit louder (to make perceived volume closer to Windows), you can import my [loudness profile](easyeffects/loudness.json) (it's a simple boost, designed to make lower volume levels more usable).
 
 ### Screaming speakers issue
-If you use live monitoring applications like reaper or audacity with the headphones unplugged, and have both the speakers and the internal mic active, as long as either volume is high enough, the speakers will start emitting an annoying high pitch sound due to a feedback loop of echoing signals. As for the above point, this is a hardware limitation that Windows solves using proprietary software. It's possible that this may be fixed using another easyeffects profile (e.g. a notch filter), but given that is quite a niche scenario, I'd recommend just using headphones if this is your use-case; this will remove the spurious signal and completely solve the issue.
+If you use live monitoring applications (like reaper or audacity) with the headphones unplugged, and have both the speakers and the internal mic active, as long as either volume is high enough, the speakers will start emitting an annoying high pitch sound due to a feedback loop of echoing signals. Just like the echoing jack issue, this is a hardware limitation that Windows solves using proprietary software. It's possible that this may be fixed using another easyeffects profile (e.g. a notch filter), but given that is quite a niche scenario, I'd recommend just using headphones if this is your use-case; this will remove the spurious signal and completely solve the issue.
 
 ## FAQ
 ### Can I use this on other Linux distros?
@@ -209,7 +209,10 @@ There exist multiple ways to compile the Linux kernel under Fedora (with some gu
 No. The original kernel remains installed unless you manually remove it, *which you never should*; it's recommended to always keep a backup. You can select which kernel to boot from the GRUB menu (quickly press ESC repeatedly during boot).
 
 ### How do I update to a newer kernel version?
-Simply download and install the new kernel package using `dnf`, using the same steps. The old custom kernel will remain installed as a fallback; you can remove it by using `dnf remove` on all the RPM packages, or by using `dnf history undo` on the original transaction. Alternatively, you can do nothing at all: by default, Fedora keeps around three kernels, so when you install a new one, the oldest will be removed.
+Simply download and install the new kernel package and run the same `dnf install --nogpgcheck` command detailed in this guide; anything else (like installing the firmware, installing thr NVIDIA package, and setting the correct audio profile) has to be done only once, no need to repeat those steps. Alternatively, simply re-run the install script; it will automatically download and install the latest kernel built by GitHub actions, while skipping the pre- and post- install steps that have been already completed. 
+
+### How do I remove an older versions of the patched kernel?
+When you install a newer build of the patched kernel, the old one will remain installed as a fallback; you can remove it by using `dnf remove` on all the RPM packages, or by using `dnf history undo` on the original transaction. Alternatively, you can do nothing at all: by default, Fedora keeps around three kernels, so when you install a new one, the oldest will be removed.
 
 ### Do I need to reinstall after Fedora updates?
 Regular Fedora updates won't affect the custom kernel. However, when new kernel versions are released, you may want to install updated versions from this repository for the latest features and security fixes.
