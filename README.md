@@ -54,7 +54,7 @@ If you read [the original guide](https://github.com/nadimkobeissi/16iax10h-linux
 ### Manual installation
 If you'd rather not run an automated install script, follow the steps below to install everything manually.
 1. **Install the firmware**
-- Download the [aw88399_acf.bin file](firmware/aw88399/aw88399_acf.bin) from this repo's [firmware folder](firmware/); alternatively, you can extract the binary yourself from the Windows driver by following the instructions in the [firmware extraction guide](docs/firmware_extraction.md).
+- Download the [aw88399_acf.bin file](firmware/aw88399/aw88399_acf.bin); alternatively, you can extract the binary yourself from the Windows driver by following the instructions in the [firmware extraction guide](docs/firmware_extraction.md).
 - *Optional but recommended:* Download the [`aw88399_acf.bin.sha256`](firmware/aw88399/aw88399_acf.bin.sha256) file, put it in the same folder as the downloaded `aw88399_acf.bin`, and check the integrity of the binary:
 ```bash
 # run this in the folder containing both the .bin and the .bin.sha256 files
@@ -81,6 +81,7 @@ sudo cp -f WIFI_RAM_CODE_MT6639_2_1.bin /lib/firmware/mediatek/mt7927
 # install bt firmware
 sudo cp -f BT_RAM_CODE_MT6639_2_1_hdr.bin /lib/firmware/mediatek/mt7927
 ```
+To obtain your own copy of these Mediatek binaries from official Windows drivers, you can use the scripts in [jetm](https://github.com/jetm/mediatek-mt7927-dkms)'s repo.
 
 
 2. **Install the NVIDIA driver builder**
