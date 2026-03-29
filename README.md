@@ -73,12 +73,8 @@ sha256sum -c WIFI_MT6639_PATCH_MCU_2_1_hdr.bin.sha256
 sudo mkdir -p /lib/firmware/mediatek/mt7927
 sudo cp -f WIFI_MT6639_PATCH_MCU_2_1_hdr.bin /lib/firmware/mediatek/mt7927
 sudo cp -f WIFI_RAM_CODE_MT6639_2_1.bin /lib/firmware/mediatek/mt7927
-```
-
-```bash
 # install bt firmware
-sudo mkdir -p /lib/firmware/mediatek/mt6639
-sudo cp -f BT_RAM_CODE_MT6639_2_1_hdr.bin /lib/firmware/mediatek/mt6639
+sudo cp -f BT_RAM_CODE_MT6639_2_1_hdr.bin /lib/firmware/mediatek/mt7927
 ```
 
 

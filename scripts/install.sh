@@ -39,7 +39,7 @@ AW_FW_SRC_URL="${RAW_BASE}/firmware/aw88399/aw88399_acf.bin"
 AW_FW_SHA_URL="${RAW_BASE}/firmware/aw88399/aw88399_acf.bin.sha256"
 
 MT_FW_DIR_WIFI="/lib/firmware/mediatek/mt7927"
-MT_FW_DIR_BT="/lib/firmware/mediatek/mt6639"
+MT_FW_DIR_BT="/lib/firmware/mediatek/mt7927"
 MT_FW_FILES=(
     "WIFI_MT6639_PATCH_MCU_2_1_hdr.bin:${MT_FW_DIR_WIFI}"
     "WIFI_RAM_CODE_MT6639_2_1.bin:${MT_FW_DIR_WIFI}"
