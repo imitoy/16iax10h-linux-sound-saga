@@ -107,7 +107,6 @@ sha256sum -c legion-pro7-audio-*.tar.gz.sha256
 - Unpack the archive and install the RPMs:
 ```bash
 tar xzf legion-pro7-audio-*.tar.gz
-cd ...
 sudo dnf install --nogpgcheck kernel-*.rpm
 ```
 The patched kernel will now be available in the grub menu. Before rebooting, run
