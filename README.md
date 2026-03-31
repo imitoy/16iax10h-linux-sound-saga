@@ -119,7 +119,7 @@ sudo akmods --force
 and wait for it to confirm that the NVIDIA driver for the patched kernel has been built successfully.
 
 4. **Post install**
-After rebooting, verify the installation:
+- After rebooting, verify the installation:
 ```bash
 # Check kernel version
 uname -r
@@ -212,10 +212,13 @@ There exist multiple ways to compile the Linux kernel under Fedora (with some gu
 No. The original kernel remains installed unless you manually remove it, *which you never should*; it's recommended to always keep a backup. You can select which kernel to boot from the GRUB menu (quickly press ESC repeatedly during boot).
 
 ### How do I update to a newer kernel version?
-simply re-run the install script; it will automatically download and install the latest kernel built by GitHub Actions, while skipping the pre- and post- install steps that have been already completed. Alternatively, download and extract the updated tarball, then run the same `dnf install --nogpgcheck` command detailed in the "manual install" section above; anything else (like installing the firmware, installing the NVIDIA package, and setting the correct audio profile) has to be done only once, no need to repeat those steps.
+Simply re-run the install script; it will automatically download and install the latest kernel built by GitHub Actions, while skipping the pre- and post- install steps that have been already completed.
+
+Alternatively, download and extract the updated tarball, then run the same `dnf install --nogpgcheck` command detailed in the "manual install" section above; anything else (like installing the firmware, installing the NVIDIA package, and setting the correct audio profile) has to be done only once, no need to repeat those steps.
 
 ### How do I remove an older versions of the patched kernel?
 The recommended way to uninstall old kernel builds is to do nothing at all: by default, Fedora keeps around three kernels as fallback, so when you install a new one, the oldest will be removed.
+
 To manually remove a kernel, you can use `dnf remove` on all the RPM packages that were installed by the wizard or you, which you can find using `rpm -qa | grep legion`. Another (slightly faster) way to remove all these packages is by using `dnf history undo` on the original transaction (check which number you need using `dnf history list`). 
 Keep in mind that `dnf` prevents the user from removing the kernel currently in use for obvious reasons, so if you want to remove an older install, ensure you do this after booting another kernel from the grub boot menu.
 
