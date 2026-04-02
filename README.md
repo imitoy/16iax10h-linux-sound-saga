@@ -216,7 +216,7 @@ Simply re-run the install script; it will automatically download and install the
 
 Alternatively, download and extract the updated tarball, then run the same `dnf install --nogpgcheck` command detailed in the "manual install" section above; anything else (like installing the firmware, installing the NVIDIA package, and setting the correct audio profile) has to be done only once, no need to repeat those steps.
 
-### How do I remove an older versions of the patched kernel?
+### How do I remove an older version of the patched kernel?
 The recommended way to uninstall old kernel builds is to do nothing at all: by default, Fedora keeps around three kernels as fallback, so when you install a new one, the oldest will be removed.
 
 To manually remove a kernel, you can use `dnf remove` on all the RPM packages that were installed by the wizard or you, which you can find using `rpm -qa | grep legion`. Another (slightly faster) way to remove all these packages is by using `dnf history undo` on the original transaction (check which number you need using `dnf history list`). 
@@ -226,7 +226,7 @@ Keep in mind that `dnf` prevents the user from removing the kernel currently in 
 Regular Fedora updates won't affect the custom kernel. However, when new kernel versions are released, you may want to install updated versions from this repository for the latest features and security fixes.
 
 ### Where does the firmware come from?
-See the [Firmware Extraction Guide](docs/firmware_extraction.md) for details on how aw88399_acf.bin was extracted from the Windows driver, and how you can extract it yourself if you wish to do so.
+See the [Firmware Extraction Guide](docs/firmware_extraction.md) for details on how `aw88399_acf.bin` was extracted from the Windows driver, and how you can extract it yourself if you wish to do so.
 
 ### How do I know this is safe?
 - All builds are automated via [this GitHub Actions pipeline](.github/workflows/build_kernel.yml); the RPMs available here were *not* uploaded manually by me. You can check the building process in detail by clicking on the *Actions* button at the top of the page, or by clicking [here](https://github.com/marco-giunta/legion-pro7-gen10-audio/actions).
@@ -247,7 +247,7 @@ I believe it should be possible to install the same patched kernel RPMs on immut
 ## Credits
 
 ### Audio patch
-This project builds upon the Intel audio driver work by Lyapsus, Nadim Kobeissi and others at [nadimkobeissi/16iax10h-linux-sound-saga](https://github.com/nadimkobeissi/16iax10h-linux-sound-saga). I worked on porting the patch to the AMD model, fixing the broken bass volume controls, the distorted internal mic, the echoing jack, extending parts of the patch, reverse engineering parts of the Windows driver, and automating the process of building the patched kernel using Fedora's tools.
+This project builds upon the Intel audio driver work by Lyapsus, Nadim Kobeissi and others at [nadimkobeissi/16iax10h-linux-sound-saga](https://github.com/nadimkobeissi/16iax10h-linux-sound-saga). I worked on porting the patch to the AMD model, fixing the broken bass volume controls, the distorted internal mic, the echoing jack, extending parts of the patch, reverse engineering parts of the Windows driver, and automating the process of building the patched kernel using Fedora's tools. See [here](https://github.com/nadimkobeissi/16iax10h-linux-sound-saga/issues/30#issuecomment-4176726805) and [here](https://github.com/nadimkobeissi/16iax10h-linux-sound-saga/issues/34#issuecomment-4176480130) for detailed descriptions.
 
 <details>
 <summary>Full credits from Nadim Kobeissi's repository</summary>
