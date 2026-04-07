@@ -74,12 +74,13 @@ After the script is done, reboot; your system should automatically boot the patc
 ![I apologize for being too lazy to change my OS language to English.](docs/kde_analog_stereo_duplex_sound_profile.png)
 
 If you own the Intel model, you can optionally set (e.g. with `grubby`) the `snd_intel_dspcfg.dsp_driver=3` boot parameter. This has the effect of making those spurious audio profiles disappear, leaving only the correct one in place. The right profile will also be renamed, so that its meaning is less ambiguous.
-However, this is mostly a cosmetic change, so personally I'd recommend just setting the duplex profile as shown in the above screenshot.
+However, this is mostly a cosmetic change, so I recommend just setting the duplex profile as shown in the above screenshot.
 
 ### Manual installation
-If you'd rather not run an automated install script, follow the steps below to install everything manually.
+If you'd rather not run an automated script, follow the steps below to install everything manually; these are functionally equivalent to the install wizard.
+
 1. **Install the firmware**
-- Download the [aw88399_acf.bin file](firmware/aw88399/aw88399_acf.bin); alternatively, you can extract the binary yourself from the Windows driver by following the instructions in the [firmware extraction guide](docs/firmware_extraction.md).
+- Download the [`aw88399_acf.bin` file](firmware/aw88399/aw88399_acf.bin); alternatively, you can extract the binary yourself from the Windows driver by following the instructions in the [firmware extraction guide](docs/firmware_extraction.md).
 - *Optional but recommended:* Download the [`aw88399_acf.bin.sha256`](firmware/aw88399/aw88399_acf.bin.sha256) file, put it in the same folder as the downloaded `aw88399_acf.bin`, and check the integrity of the binary:
 ```bash
 # run this in the folder containing both the .bin and the .bin.sha256 files
@@ -159,7 +160,7 @@ rpm -qa | grep legion
 # Test audio
 speaker-test -c 2 -t wav
 ```
-The same rule stated in the previous section applies: ensure you select the analog stereo duplex profile, and you're good to go! No boot parameters or ucm2 configuration files needed.
+The same rule stated in the previous section applies: ensure you select the analog stereo duplex profile (or enable the boot parameter on the Intel model), and you're good to go!
 
 ## Optional Post-installation Steps
 
@@ -186,10 +187,9 @@ If you use live monitoring applications (like reaper or audacity) with the headp
 
 ## FAQ
 ### Can I use this on other Linux distros?
-The prepackaged RPMs are Fedora-specific. For other distros, follow the steps in [the original repo](https://github.com/nadimkobeissi/16iax10h-linux-sound-saga) to compile the Linux kernel without relying on Fedora specific tools. A few caveats:
-- If you use the patches in my repo instead of the original, the boot parameter/ucm files step is no longer necessary on the Intel model (and won't do anything on the AMD one).
-- If you have the AMD model, use my patches, otherwise volume controls and mic quality will be broken.
-- If you have the AMD model, the same
+The prepackaged RPMs are Fedora-specific. For other distros, follow the steps in [Nadim's repo](https://github.com/nadimkobeissi/16iax10h-linux-sound-saga) to compile the Linux kernel without relying on Fedora specific tools.
+
+Please notice that, if you have the AMD model, the same
 ```
 CONFIG_SND_HDA_SCODEC_AW88399=m
 CONFIG_SND_HDA_SCODEC_AW88399_I2C=m
@@ -241,6 +241,8 @@ CONFIG_SND_SOC_AMD_PS_MACH=m
 ```
 
 </details>
+
+Nadim's repo includes a section on how to extract the same list of parameters using `/proc/config.gz`. This is functionally equivalent to copying `/boot/config<...>` as described above, but the latter method is more universal, as the `/proc/config.gz` file doesn't exist on every distro (for example, Fedora doesn't include it).
 
 ### Can I build my own kernel RPMs on Fedora?
 If you wish to compile your own kernel under Fedora Linux, I recommend using my [Fedora specific self-compile guide](docs/self_compile.md) over the [original](https://github.com/nadimkobeissi/16iax10h-linux-sound-saga), as it will make the process much easier: thanks to `fedpkg`, there is no need to manually pick kernel parameters, setup NVIDIA drivers, generate the initramfs, update the grub menu, or copy the files needed to install the patched kernel.
