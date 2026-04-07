@@ -73,7 +73,8 @@ After the script is done, reboot; your system should automatically boot the patc
 ***Post-install:*** after you successfully installed the patched kernel, go to your OS sound settings, and ensure the ***Analog stereo duplex*** sound profile is selected (any other will disable the mic or some/all speakers). For example, here's how to do this in KDE Plasma:
 ![I apologize for being too lazy to change my OS language to English.](docs/kde_analog_stereo_duplex_sound_profile.png)
 
-If you read [the original guide](https://github.com/nadimkobeissi/16iax10h-linux-sound-saga), you'll see its post-install instructions involve setting a certain kernel boot parameter and copying some `ucm2` files. This is *not* needed here (and won't work on the AMD model anyway)! I take a different approach with my patch, aimed at making it work out of the box. The only required post install step is ensuring you select the correct profile, as stated above.
+If you own the Intel model, you can optionally set (e.g. with `grubby`) the `snd_intel_dspcfg.dsp_driver=3` boot parameter. This has the effect of making those spurious audio profiles disappear, leaving only the correct one in place. The right profile will also be renamed, so that its meaning is less ambiguous.
+However, this is mostly a cosmetic change, so personally I'd recommend just setting the duplex profile as shown in the above screenshot.
 
 ### Manual installation
 If you'd rather not run an automated install script, follow the steps below to install everything manually.
@@ -299,13 +300,15 @@ This project builds upon the Intel audio driver work by Lyapsus, Nadim Kobeissi 
 
 > Fixing this issue required weeks of intensive work from multiple people.
 
-> Approximately 95% of the engineering work was done by [Lyapsus](https://github.com/Lyapsus). Lyapsus improved an incomplete kernel driver, wrote new kernel codecs and side-codecs, and contributed much more. I want to emphasize his incredible kindness and dedication to solving this issue. He is the primary force behind this fix, and without him, it would never have been possible.
+> Virtually all engineering groundwork was done by [Lyapsus](https://github.com/Lyapsus). Lyapsus improved an incomplete kernel driver, wrote new kernel codecs and side-codecs, and contributed much more. I want to emphasize his incredible kindness and dedication to solving this issue. He is the primary force behind this fix, and without him, it would never have been possible.
 
 > I ([Nadim Kobeissi](https://nadim.computer)) conducted the initial investigation that identified the missing components needed for audio to work on the 16IAX10H on Linux. Building on what I learned from Lyapsus's work, I helped debug and clean up his kernel code, tested it, and made minor improvements. I also contributed the solution to the volume control issue documented in Step 8, and wrote this guide.
 
 > Gergo K. showed me how to extract the AW88399 firmware from the Windows driver package and install it on Linux, as documented in Step 1.
 
 > [Richard Garber](https://github.com/rgarber11) graciously contributed [the fix](https://github.com/nadimkobeissi/16iax10h-linux-sound-saga/issues/19#issuecomment-3594367397) for making the internal microphone work.
+
+> [Marco Giunta's fork](https://github.com/marco-giunta/legion-pro7-gen10-audio) reworked all of the above engineering effort into a much more mature patch, and was reintegrated into this repository as of Linux 6.19.10.
 
 > Sincere thanks to everyone who [pledged](https://github.com/nadimkobeissi/16iax10h-linux-sound-saga/blob/main/PLEDGE.md) a reward for solving this problem.
 </details>
