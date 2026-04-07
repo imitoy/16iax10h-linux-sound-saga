@@ -3,11 +3,15 @@
 
 > Patched Linux audio drivers for Lenovo Legion Pro 7/7i Gen 10 (AMD & Intel). Includes Fedora RPM packages and installation automation. [mt7927 community patch](https://github.com/jetm/mediatek-mt7927-dkms) also included to enable Wi-Fi and Bluetooth on the AMD model.
 
-Recent Lenovo Legion laptops use the AW88399 Smart Amp, which has incomplete support in the mainline Linux kernel. With the stock kernel only tweeters work (no bass, quiet audio); this repository provides kernel patches and pre-built RPM packages to restore full audio functionality.
+Recent Lenovo Legion laptops control their woofers using the AWDZ88399 Smart Amp via i2c bus, in a setup that requires an HDA side codec driver which currently doesn't exist in the mainline Linux kernel. Due to this, on the current stock Linux kernel, the woofers don't work, and as a result the speakers lack bass and overall sound quiet and tinny.
+This repository provides kernel patches and pre-built RPM packages to restore full audio functionality.
 
 **Supported Models**
 - Legion Pro 7i Gen 10 (16IAX10H) - Intel
 - Legion Pro 7 Gen 10 (16AFR10H) - AMD
+
+Other models may work as well; see the [Nadim's repo](https://github.com/nadimkobeissi/16iax10h-linux-sound-saga) for more details.
+If you have a variant of these Legion models with a different SSID than those currently supported, open an issue and I'll add it to the patch.
 
 **Credits & Attributions**
 
@@ -23,7 +27,7 @@ More detailed credits are available at the bottom of this page.
 - **Installation wizards** and automation scripts
 - **Comprehensive self-compile guide** for Fedora
 - **[mt7927 community patch](https://github.com/jetm/mediatek-mt7927-dkms)** to enable Wi-Fi and Bluetooth on the AMD model
-- **easyeffects profile to tackle the echoing jack**
+- **easyeffects profiles** to restore some Windows-like features
 
 ***AI disclaimer:*** Especially in the earlier stages of this project, I relied on claude.ai for help with things I didn't fully understand; as I learned more about Linux and audio, I became more confident and less reliant on those tools. I can attest that ***all the code I added to the original patch was written by me, based on existing Linux code and documentation*** (see e.g. [here](https://github.com/nadimkobeissi/16iax10h-linux-sound-saga/issues/30#issuecomment-4176726805)). Likewise, ***the guides and tools in this repo were written and tested by me, based on official Fedora documentation***.
 I still use AI for brainstorming or assistance with bugs; for example, Claude helped me fix or improve some parts of the GitHub Actions pipeline and the install script. These changes were limited to bugfixes or minor improvements; the overall logic and design are my own. Most importantly, it had no role in writing the actual kernel patch code.
@@ -171,7 +175,10 @@ While headphones are plugged in the jack port, if both music is playing and the 
 
 If you want to use easyeffects, I recommend using the flatpak version, as it already comes with all the necessary plugins and is guaranteed to be up to date (e.g. Fedora still ships the old GTK version). 
 While easyeffects is running, you will see devices called "Easy Effects Sink" and "Easy Effects Source" pop up in your sound settings; do *not* select them, as easyeffects is designed to automatically hijack the default devices.
-Also, if you want to make the speakers a bit louder (to make perceived volume closer to Windows), you can import my [loudness profile](easyeffects/loudness.json) (it's a simple boost, designed to make lower volume levels more usable).
+
+### Improved speakers loudness
+If you want to make the speakers a bit louder, you can import my [loudness profile](easyeffects/loudness.json); this is useful to make perceived volume closer to Windows. 
+This profile simply applies a slight boost, designed to make lower volume levels more usable. Feel free to increase the boost amount, but don't overdo it to avoid damaging the speakers.
 
 ### Screaming speakers issue
 If you use live monitoring applications (like reaper or audacity) with the headphones unplugged, and have both the speakers and the internal mic active, as long as either volume is high enough, the speakers will start emitting an annoying high pitch sound due to a feedback loop of echoing signals. Just like the echoing jack issue, this is a hardware limitation that Windows solves using proprietary software. It's possible that this may be fixed using another easyeffects profile (e.g. a notch filter), but given that is quite a niche scenario, I'd recommend just using headphones if this is your use-case; this will remove the spurious signal and completely solve the issue.
