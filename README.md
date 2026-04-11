@@ -79,6 +79,7 @@ However, this is mostly a cosmetic change, so if in doubt, ignore this boot para
 If you'd rather not run an automated script, follow the steps below to install everything manually; these are functionally equivalent to the install wizard.
 
 0. **Verify your device is supported**
+
 Check your SSID:
 ```bash
 grep -l "Codec: Realtek" /proc/asound/card*/codec#* | xargs grep -i "Subsystem Id"
@@ -129,6 +130,7 @@ To obtain your own copy of these Mediatek binaries from official Windows drivers
 
 
 2. **Install the NVIDIA driver builder**
+
 The `akmod-nvidia` package is needed to automatically build the NVIDIA driver for the patched kernel. This package builds the driver as distributed in the nonfree RPM Fusion repo, and is [the standard approach on Fedora](https://rpmfusion.org/Howto/NVIDIA) and what this guide assumes.
 
 > Skip this step if you prefer the open source Mesa/NVK driver, want to obtain the proprietary driver from a different repo, or are on a Fedora derivative that already manages the NVIDIA driver for you. Since the patch only touches audio (and optionally WiFi/BT on the AMD model), there's no fundamental reason why a different graphics setup shouldn't work; however, alternative paths are untested, so you're on your own. Feel free to open an issue if you run into anything useful to share. If you're unsure, just follow the steps below.
@@ -301,7 +303,13 @@ To find out which is it, follow these steps in order.
 > ⚠️ If you dual boot Windows, ***before changing any BIOS setting***, go to https://account.microsoft.com/devices/recoverykey and make sure you have your BitLocker recovery key saved and noted down. Windows will ask for it after every BIOS change, so make sure you're not locked out.
 
 1. Check if Secure Boot is enabled in the BIOS settings (it will be if your machine came with Windows and you haven't disabled SB yet); if so, disable SB and try booting the patched kernel. If this works, Secure Boot was the issue.
-2. If the above doesn't fix the black screen, the issue is likely GPU driver related. With Secure Boot still disabled, try the following: select the patched kernel in GRUB, press `e`, add `nomodeset` to the line starting with `linux`, then boot. This disables GPU mode setting entirely. If the OS boots with this parameter, the issue is driver related. In this case, boot back into the stock kernel and run `sudo akmods --force` to check whether the NVIDIA driver built correctly for the patched kernel, then try again.
+2. If the above doesn't fix the black screen, the issue is likely GPU driver related. With Secure Boot still disabled, try the following:
+- Access the GRUB menu by quickly and repeatedly pressing `ESC` during boot;
+- Highlight with the arrow keys the patched kernel, then press `e`;
+- Add `nomodeset` to the end of the line starting with `linux`, then save by pressing `CTRL+X` or `F10`.
+
+These steps disable GPU mode setting entirely. If the OS boots with this parameter, the issue is driver related. In this case, boot back into the stock kernel and run `sudo akmods --force` to check whether the NVIDIA driver built correctly for the patched kernel, then reboot and try starting the patched kernel from the GRUB menu again.
+Please note that changes to the boot parameters made using the steps above are temporary and are reset at every reboot, so to test if rebuilding the driver worked, you don't have to manually remove the `nomodeset` parameter; booting normally suffices.
 
 ### Immutable Fedora spins and derivatives
 It should be possible to use the patched kernel on immutable distributions by installing the RPMs with `rpm-ostree` instead of `dnf`. However, a proper setup will likely require rebasing your image to include both the patched kernel and the necessary firmware binaries. While the former is likely achievable with `rpm-ostree`, the latter is less straightforward and not something I have explored.
