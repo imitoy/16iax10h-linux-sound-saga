@@ -7,11 +7,10 @@ Recent Lenovo Legion laptops control their woofers using the AWDZ88399 Smart Amp
 This repository provides kernel patches and pre-built RPM packages to restore full audio functionality.
 
 **Supported Models**
-- Legion Pro 7i Gen 10 (16IAX10H) - Intel
-- Legion Pro 7 Gen 10 (16AFR10H) - AMD
+- Lenovo Legion Pro 7i Gen 10 (16IAX10H) - Intel
+- Lenovo Legion Pro 7  Gen 10 (16AFR10H) - AMD
 
-Other models may work as well; see the [Nadim's repo](https://github.com/nadimkobeissi/16iax10h-linux-sound-saga) for more details.
-If you have a variant of these Legion models with a different SSID than those currently supported, open an issue and I'll add it to the patch.
+Other Legion models may also benefit from this patch despite being currently unsupported; for example, [Nadim's repo](https://github.com/nadimkobeissi/16iax10h-linux-sound-saga) contains some examples of this patch working on other Legion models. To check if this patch also applies to other laptops, read step 0 of the "manual install" section and the "Will this patch work on other laptops?" FAQ entry below.
 
 **Credits & Attributions**
 
@@ -78,6 +77,25 @@ However, this is mostly a cosmetic change, so if in doubt, ignore this boot para
 
 ### Manual installation
 If you'd rather not run an automated script, follow the steps below to install everything manually; these are functionally equivalent to the install wizard.
+
+0. **Verify your device is supported**
+Check your SSID:
+```bash
+grep -l "Codec: Realtek" /proc/asound/card*/codec#* | xargs grep -i "Subsystem Id"
+```
+You should see a line like `Subsystem Id: 0x17aa<...>`, where `<...>` equals 4 characters. These are the IDs currently supported by the patch:
+- `0x17aa3906`, `0x17aa3907`, `0x17aa3d6c` - Legion Pro 7i Gen 10 (16IAX10H, Intel)
+- `0x17aa3938`, `0x17aa3939` - Legion Pro 7 Gen 10 (16AFR10H, AMD)
+
+If your ID matches one of these, proceed to step 1.
+
+If your ID is not listed, but
+```bash
+cat /sys/class/dmi/id/product_family
+```
+returns a string containing `16AFR10H` or `16IAX10H`, your Legion has an undiscovered hardware revision. In this case, please open an issue and paste the output of these commands, and I will add the missing SSID to the patch.
+
+If you don't get a matching SSID and your laptop is a different model (or even from a different manufacturer), please check the "Will this patch work on other laptops?" FAQ entry.
 
 1. **Install the firmware**
 - Download the [`aw88399_acf.bin` file](firmware/aw88399/aw88399_acf.bin); alternatively, you can extract the binary yourself from the Windows driver by following the instructions in the [firmware extraction guide](docs/firmware_extraction.md).
@@ -291,6 +309,56 @@ It should be possible to use the patched kernel on immutable distributions by in
 Similarly, the steps in the [self-compile guide](docs/self_compile.md) should work if performed inside a container.
 
 As I've only tested everything on Fedora 43 KDE, I can't make any guarantees. If you're on a distro like Bazzite, feel free to try it out, and if you do get it working, please open an issue and share what you did so I can update the main guide!
+
+### Will this patch work on other laptops?
+This patch has two components:
+
+1. *AW88399 HDA side codec driver:* The AW88399 is a smart amplifier used to drive the woofers; on some laptops, this happens via I2C bus, in a setup which requires an HDA side codec driver that is currently missing from the mainline Linux kernel. This part of the patch adds that missing driver, and is in principle useful for any laptop using this chip in this configuration, regardless of manufacturer or model.
+
+2. *PCI subsystem ID quirk:* The kernel needs to know which laptops use this setup in order to load the right driver and firmware at boot. This is done via a quirk entry specific to each laptop model, identified by its PCI subsystem ID. This is the part that must be added on a per-model basis, and is what determines whether a given laptop is "supported" by this patch: without the correct quirk entry, even a laptop that would benefit from the new driver will never use it, because the kernel doesn't know that it is supposed to load it on that specific model.
+
+If your laptop's woofers don't work on Linux, it may be tempting to try this patch, but broken woofers can have many causes, and this patch only fixes this specific hardware configuration. Having said that, if your laptop uses the same AW88399 smart amp, there is a real chance it could benefit from this patch once a quirk entry is added for your model; indeed, the AW88399 chip with other hardware configurations is already supported in the Linux kernel, so if you have the AW88399 but your woofers are still broken, this patch may apply.
+
+To check if your laptop contains the AW88399 smart amp chip, follow the steps below. Please know that these instructions are not foolproof (you may need a more thorough independent hardware investigation), and that they likely apply mostly to related Lenovo laptops (for example, other Gen 10 Legions, or Legion Pro 7 models from other generations).
+
+**To check if your laptop uses the AW88399:**
+1. Download the Windows audio driver for your laptop from the manufacturer's website. For example, you can download Lenovo drivers from [this website](https://pcsupport.lenovo.com).
+2. Install `innoextract`; for example, on Fedora you can use:
+```bash
+sudo dnf install innoextract
+```
+3. Extract the contents of the Windows driver:
+```bash
+   innoextract <driver_installer.exe>
+```
+   This creates a folder called `code$GetExtractPath$` with multiple subfolders.
+4. Navigate to that folder, then search for the firmware file:
+```bash
+   find . -name "AWDZ8399.bin"
+```
+   If the file is found, your laptop uses the AW88399.
+5. Compute its sha256 checksum:
+```bash
+   sha256sum <path/to/AWDZ8399.bin>
+```
+   Compare this against [`firmware/aw88399/aw88399_acf.bin.sha256`](firmware/aw88399/aw88399_acf.bin.sha256). A match means your laptop uses the exact same firmware, which is a strong indicator the patch will work. A mismatch means your laptop may use a different variant of the chip with different firmware, in which case the patch may still apply, but this is uncharted territory.
+
+If you do find the `AWDZ8399.bin` firmware, and its checksum matches, please open an issue clearly stating:
+- Your laptop manufacturer and model, which you can confirm by running:
+```bash
+cat /sys/class/dmi/id/sys_vendor
+cat /sys/class/dmi/id/product_family
+```
+- Your subsystem ID, which you can find by running:
+```bash
+grep -l "Codec: Realtek" /proc/asound/card*/codec#* | xargs grep -i "Subsystem Id"
+```
+In addition to the above, please also paste into your issue the output of this command:
+```bash
+cat $(grep -l "Codec: Realtek" /proc/asound/card*/codec#*)
+```
+
+I can then try adding support for your device by adding its ID (but I make no promises this will work).
 
 ## Credits
 
