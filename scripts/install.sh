@@ -81,7 +81,7 @@ require_supported_device() {
     if [[ "${product_family}" == *"16AFR10H"* ]] || \
        [[ "${product_family}" == *"16IAX10H"* ]]; then
         warn "Your device appears to be a supported Lenovo Legion Pro 7/7i Gen 10 model,"
-        warn "but with a hardware revision (SSID 0x17aa${ssid}) not yet in the patch."
+        warn "but with a hardware revision (SSID 0x${ssid}) not yet in the patch."
         warn "Please open an issue at https://github.com/${GITHUB_REPO}/issues"
         warn "and paste the above output; this will help add support for your laptop."
     else
