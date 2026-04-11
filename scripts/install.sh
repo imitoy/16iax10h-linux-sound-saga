@@ -54,6 +54,48 @@ is_amd_model() {
 }
 
 # Prerequisites helpers
+SUPPORTED_SSIDS=("17aa3906" "17aa3907" "17aa3d6c" "17aa3938" "17aa3939")
+require_supported_device() {
+    # Check manufacturer
+    [[ "$(cat /sys/class/dmi/id/sys_vendor 2>/dev/null)" == "LENOVO" ]] \
+        || die "This script is only for Lenovo laptops!"
+
+    # Find Realtek codec SSID
+    codec=$(grep -l "Codec: Realtek" /proc/asound/card*/codec#* 2>/dev/null | head -1)
+    [[ -z "${codec}" ]] && die "No Realtek audio codec found; unsupported device, automated install aborted."
+
+    ssid=$(grep -i "Subsystem Id" "${codec}" | grep -oP '0x\K[0-9a-f]+')
+
+    for supported in "${SUPPORTED_SSIDS[@]}"; do
+        if [[ "${ssid}" == "${supported}" ]]; then
+            ok "Supported device detected (Subsystem ID: 0x${ssid})"
+            return 0
+        fi
+    done
+
+    # SSID not in supported list -> gather diagnostics before dying
+    product_family=$(cat /sys/class/dmi/id/product_family 2>/dev/null)
+    warn "Detected device  : ${product_family}"
+    warn "Detected SSID    : 0x${ssid}"
+    warn ""
+    if [[ "${product_family}" == *"16AFR10H"* ]] || \
+       [[ "${product_family}" == *"16IAX10H"* ]]; then
+        warn "Your device appears to be a supported Lenovo Legion Pro 7/7i Gen 10 model,"
+        warn "but with a hardware revision (SSID 0x17aa${ssid}) not yet in the patch."
+        warn "Please open an issue at https://github.com/${GITHUB_REPO}/issues"
+        warn "and paste the above output; this will help add support for your laptop."
+    else
+        warn "Your device is not a known supported model."
+        warn "If your laptop's woofers don't work on Linux, it may be tempting to try"
+        warn "this patch, but broken woofers can have many causes, and this patch"
+        warn "only fixes one specific hardware configuration."
+        warn "Having said that, other laptops may use the same underlying hardware"
+        warn "and could benefit from this patch. Check the FAQ in the repository for"
+        warn "instructions on how to verify this before proceeding with a manual install."
+    fi
+    die "Unsupported device -> automated install aborted."
+}
+
 require_fedora() {
     grep -qi "fedora" /etc/os-release || die "This script is only for Fedora Linux!"
 }
@@ -89,6 +131,7 @@ heading "Legion Pro 7/7i Gen 10 - patched kernel installer"
 echo    "Repository : ${GITHUB_REPO}"
 echo
 
+require_supported_device
 require_fedora
 require_root
 require_cmd curl
