@@ -340,11 +340,13 @@ sudo dnf install innoextract
    innoextract <driver_installer.exe>
 ```
    This creates a folder called `code$GetExtractPath$` with multiple subfolders.
+   
 4. Navigate to that folder, then search for the firmware file:
 ```bash
    find . -name "AWDZ8399.bin"
 ```
    If the file is found, your laptop uses the AW88399.
+   
 5. Compute its sha256 checksum:
 ```bash
    sha256sum <path/to/AWDZ8399.bin>
