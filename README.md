@@ -188,7 +188,33 @@ The same rule stated in the previous section applies: ensure you select the anal
 TODO: add secure boot guide. In the meantime, see links in [issue #1](https://github.com/marco-giunta/legion-pro7-gen10-audio/issues/1)
 
 ### Set the patched kernel as persistent default
-TODO: add post install grubby script. In the meantime, see links in [issue #1](https://github.com/marco-giunta/legion-pro7-gen10-audio/issues/1)
+If you keep both the patched and stock kernels installed (recommended), every time Fedora ships a kernel update, the stock kernel will silently reclaim the default GRUB boot entry. Because of this, the patched kernel will no longer automatically boot, and you'll have to select it manually from the GRUB boot menu on every startup. The fix below automatically re-asserts the patched kernel as default after every kernel install.
+
+[All credit for this fix goes to GitHub user mikaeldui.](https://gist.github.com/mikaeldui/bf3cd9b6932ff3a2d49b924def778ebb)
+
+1. Create the post-install script:
+```bash
+sudo mkdir -p /etc/kernel/postinst.d
+sudo nano /etc/kernel/postinst.d/99-default
+```
+
+2. Paste the following inside the terminal:
+```bash
+#!/bin/sh
+
+set -e
+
+grubby --set-default=/boot/$(ls -v /boot | grep vmlinuz.*legion | tail -1)
+```
+Save the script with `CTRL+X`, followed by `y`, then `ENTER`.
+
+3. Set the correct ownership and permissions:
+```bash
+sudo chown root:root /etc/kernel/postinst.d/99-default
+sudo chmod u+rx /etc/kernel/postinst.d/99-default
+```
+
+These steps have to be performed only once. You can verify the default kernel at any time by running `sudo grubby --default-kernel`; the output should contain the word `legion`.
 
 ### Echoing jack issue fix
 While headphones are plugged in the jack port, if both music is playing and the mic is recording (e.g. you are on a discord call while playing a game), if the output volume is high enough, the mic will pick up a quieter copy of the signal being played, causing an annoying echo (quiet but audible). [Based on my findings](https://github.com/nadimkobeissi/16iax10h-linux-sound-saga/issues/34#issuecomment-4176480130), this is a hardware limitation that Windows fixes with clever proprietary software that cannot be easily replicated 1:1 under Linux. To fix this issue, you have two options:
