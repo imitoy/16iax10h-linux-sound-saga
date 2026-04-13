@@ -231,7 +231,8 @@ This profile simply applies a slight boost, designed to make lower volume levels
 ### Screaming speakers issue
 If you use live monitoring applications (like reaper or audacity) with the headphones unplugged, and have both the speakers and the internal mic active, as long as either volume is high enough, the speakers will start emitting an annoying high pitch sound due to a feedback loop of echoing signals. Just like the echoing jack issue, this is a hardware limitation that Windows solves using proprietary software. It's possible that this may be fixed using another easyeffects profile (e.g. a notch filter), but given that is quite a niche scenario, I'd recommend just using headphones if this is your use-case; this will remove the spurious signal and completely solve the issue.
 
-## FAQ
+---
+# FAQ
 ### Can I use this on other Linux distros?
 The prepackaged RPMs are Fedora-specific. For other distros, follow the steps in [Nadim's repo](https://github.com/nadimkobeissi/16iax10h-linux-sound-saga) to compile the Linux kernel without relying on Fedora specific tools.
 
@@ -396,6 +397,7 @@ cat $(grep -l "Codec: Realtek" /proc/asound/card*/codec#*)
 
 I can then try adding support for your device by adding its ID (but I make no promises this will work).
 
+---
 ## Credits
 
 ### Audio patch
