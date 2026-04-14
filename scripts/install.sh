@@ -258,8 +258,16 @@ echo    "       repeatedly during boot to open the GRUB menu and select the entr
 echo    "       containing 'legion' in its name. Then check again with uname -r"
 echo    "    3. In your OS sound settings, select the"
 echo    "       'Analog stereo duplex' profile."
-echo    "    4. (Optional) Check the github repo to download the easyeffects profiles"
-echo    "       for further fixes."
+echo
+echo -e "  ${BOLD}Further improvements:${RESET}"
+echo    "  See the 'Optional Post-installation Steps' section of the README for"
+echo    "  instructions on how to:"
+echo    "    - Set the patched kernel as the persistent default boot entry."
+echo    "    - Re-enable Secure Boot by signing the kernel with your own MOK."
+echo    "    - Fix echo on the headphone jack when audio playback and microphone"
+echo    "      recording are active simultaneously (e.g. during discord calls while gaming)."
+echo    "    - Improve speaker loudness."
+echo    "  These fixes are not mandatory, but they are recommended."
 echo
 echo    "  If anything went wrong, you can always boot the stock kernel from"
 echo    "  the GRUB menu - do NOT remove it."
