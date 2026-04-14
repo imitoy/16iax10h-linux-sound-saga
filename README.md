@@ -10,7 +10,13 @@ This repository provides kernel patches and pre-built RPM packages to restore fu
 - Lenovo Legion Pro 7i Gen 10 (16IAX10H) - Intel
 - Lenovo Legion Pro 7  Gen 10 (16AFR10H) - AMD
 
-Other Legion models may also benefit from this patch despite being currently unsupported; for example, [Nadim's repo](https://github.com/nadimkobeissi/16iax10h-linux-sound-saga) contains some examples of this patch working on other Legion models. To check if this patch also applies to other laptops, read step 0 of the "manual install" section and the "Will this patch work on other laptops?" FAQ entry below.
+**Models potentially supported but not yet verified** *(matching Windows audio firmware confirmed)*
+- Legion Pro 5 Gen 10 (16AFR10) - AMD
+- Legion Pro 5 Gen 10 (16IAX10/16IAX10H) - Intel
+- Legion 5 Gen 10 (16IAX10/16IAX10H) - Intel
+- Legion 7 Gen 10 (16IAX10/16IAX10H) - Intel
+
+If you own one of the laptops above, it's quite likely that this patch could apply, but some extra work may be needed. Other Legion models may also benefit from this patch despite being currently unsupported; for example, [Nadim's repo](https://github.com/nadimkobeissi/16iax10h-linux-sound-saga) contains some examples of this. To check if this patch applies to your laptop (Lenovo Legion or otherwise), read step 0 of the "manual install" section and the "Will this patch work on other laptops?" FAQ entry below.
 
 **Credits & Attributions**
 
@@ -380,20 +386,7 @@ sudo dnf install innoextract
 ```
    Compare this against [`firmware/aw88399/aw88399_acf.bin.sha256`](firmware/aw88399/aw88399_acf.bin.sha256). A match means your laptop uses the exact same firmware, which is a strong indicator the patch will work. A mismatch means your laptop may use a different variant of the chip with different firmware, in which case the patch may still apply, but this is uncharted territory.
 
-If you do find the `AWDZ8399.bin` firmware, and its checksum matches, please open an issue clearly stating:
-- Your laptop manufacturer and model, which you can confirm by running:
-```bash
-cat /sys/class/dmi/id/sys_vendor
-cat /sys/class/dmi/id/product_family
-```
-- Your subsystem ID, which you can find by running:
-```bash
-grep -l "Codec: Realtek" /proc/asound/card*/codec#* | xargs grep -i "Subsystem Id"
-```
-In addition to the above, please also paste into your issue the output of this command:
-```bash
-cat $(grep -l "Codec: Realtek" /proc/asound/card*/codec#*)
-```
+If you do find the `AWDZ8399.bin` firmware, and its checksum matches, please open an issue clearly stating the information collected using [this guide](docs/support_new_laptops.md).
 
 I can then try adding support for your device by adding its ID (but I make no promises this will work).
 
