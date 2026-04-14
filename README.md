@@ -52,9 +52,9 @@ Because of this, Secure Boot must either be disabled or properly configured befo
 *Recommended approach*:
 1. Disable Secure Boot in the BIOS;
 2. Install the patched kernel and NVIDIA drivers, and verify that the system boots correctly;
-3. Optionally, sign the kernel and drivers, then re-enable Secure Boot (see the "optional post-installation steps" section for instructions).
+3. Optionally, sign the kernel and drivers, then re-enable Secure Boot (see the [Secure Boot guide](docs/secure_boot.md) for instructions).
 
-> ⚠️ If you dual boot Windows, ***before changing any BIOS setting***, go to https://account.microsoft.com/devices/recoverykey and make sure you have your BitLocker recovery key saved and noted down. Windows will ask for it after every BIOS change, so make sure you're not locked out.
+> ⚠️ If you dual boot Windows, ***before changing any BIOS setting***, go to https://account.microsoft.com/devices/recoverykey and make sure you have your BitLocker recovery key saved and noted down. Windows will ask for it e.g. after disabling Secure Boot, so make sure you're not locked out.
 
 ## Installation guides
 There are two main ways to install the patched kernel on Fedora.
@@ -185,7 +185,7 @@ The same rule stated in the previous section applies: ensure you select the anal
 ## Optional Post-installation Steps
 
 ### Secure Boot
-TODO: add secure boot guide. In the meantime, see links in [issue #1](https://github.com/marco-giunta/legion-pro7-gen10-audio/issues/1)
+Once the patched kernel and NVIDIA drivers are working, you can optionally re-enable Secure Boot by signing the kernel and modules with your own Machine Owner Key (MOK). See the [Secure Boot guide](docs/secure_boot.md) for full step-by-step instructions.
 
 ### Set the patched kernel as persistent default
 If you keep both the patched and stock kernels installed (recommended), every time Fedora ships a kernel update, the stock kernel will silently reclaim the default GRUB boot entry. Because of this, the patched kernel will no longer automatically boot, and you'll have to select it manually from the GRUB boot menu on every startup. The fix below automatically re-asserts the patched kernel as default after every kernel install.
@@ -327,7 +327,7 @@ A black screen can also indicate a GPU driver initialization failure.
 
 To find out which is it, follow these steps in order.
 
-> ⚠️ If you dual boot Windows, ***before changing any BIOS setting***, go to https://account.microsoft.com/devices/recoverykey and make sure you have your BitLocker recovery key saved and noted down. Windows will ask for it after every BIOS change, so make sure you're not locked out.
+> ⚠️ If you dual boot Windows, ***before changing any BIOS setting***, go to https://account.microsoft.com/devices/recoverykey and make sure you have your BitLocker recovery key saved and noted down. Windows will ask for it e.g. after disabling Secure Boot, so make sure you're not locked out.
 
 1. Check if Secure Boot is enabled in the BIOS settings (it will be if your machine came with Windows and you haven't disabled SB yet); if so, disable SB and try booting the patched kernel. If this works, Secure Boot was the issue.
 2. If the above doesn't fix the black screen, the issue is likely GPU driver related. With Secure Boot still disabled, try the following:
