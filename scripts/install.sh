@@ -78,12 +78,22 @@ require_supported_device() {
     warn "Detected device  : ${product_family}"
     warn "Detected SSID    : 0x${ssid}"
     warn ""
-    if [[ "${product_family}" == *"16AFR10H"* ]] || \
-       [[ "${product_family}" == *"16IAX10H"* ]]; then
+    # Exact matches for known supported commercial names -> unknown revision
+    if [[ "${product_family}" == "Legion Pro 7 16AFR10H" ]] || \
+       [[ "${product_family}" == "Legion Pro 7 16IAX10H" ]] || \
+       [[ "${product_family}" == "Legion Pro 7i 16IAX10H" ]]; then
         warn "Your device appears to be a supported Lenovo Legion Pro 7/7i Gen 10 model,"
         warn "but with a hardware revision (SSID 0x${ssid}) not yet in the patch."
         warn "Please open an issue at https://github.com/${GITHUB_REPO}/issues"
-        warn "and paste the above output; this will help add support for your laptop."
+        warn "and paste this script's output. This will help add support for your laptop."
+    # Substring matches for other potentially compatible models
+    elif [[ "${product_family}" == *"16AFR10"* ]] || \
+         [[ "${product_family}" == *"16IAX10"* ]]; then
+        warn "Your device appears to be a currently unsupported Lenovo Legion,"
+        warn "but it's one of the models for which support could likely be added."
+        warn "Please open an issue using the instructions in the guide linked"
+        warn "at the bottom of the 'Will this patch work on other laptops?' section of"
+        warn "the readme's FAQ. This will help add support for your laptop."
     else
         warn "Your device is not a known supported model."
         warn "If your laptop's woofers don't work on Linux, it may be tempting to try"

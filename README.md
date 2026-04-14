@@ -96,11 +96,7 @@ You should see a line like `Subsystem Id: 0x17aa<...>`, where `<...>` equals 4 c
 
 If your ID matches one of these, proceed to step 1.
 
-If your ID is not listed, but
-```bash
-cat /sys/class/dmi/id/product_family
-```
-returns a string containing `16AFR10H` or `16IAX10H`, your Legion has an undiscovered hardware revision. In this case, please open an issue and paste the output of these commands, and I will add the missing SSID to the patch.
+If your ID is not listed, but your laptop is a `Legion Pro 7 16AFR10H` or `Legion Pro 7i 16IAX10H` (you can confirm this by running `cat /sys/class/dmi/id/product_family`), your Legion has an undiscovered hardware revision. In this case, please open an issue and paste the output of these commands, and I will add the missing SSID to the patch.
 
 If you don't get a matching SSID and your laptop is a different model (or even from a different manufacturer), please check the "Will this patch work on other laptops?" FAQ entry.
 
