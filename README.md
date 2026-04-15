@@ -78,9 +78,6 @@ After the script is done, reboot; your system should automatically boot the patc
 ***Post-install:*** after you successfully installed the patched kernel, go to your OS sound settings, and ensure the ***Analog stereo duplex*** sound profile is selected (any other will disable the mic or some/all speakers). For example, here's how to do this in KDE Plasma:
 ![I apologize for being too lazy to change my OS language to English.](docs/kde_analog_stereo_duplex_sound_profile.png)
 
-If you own the Intel model, you can optionally set (e.g. with `grubby`) the `snd_intel_dspcfg.dsp_driver=3` boot parameter. This has the effect of making those spurious audio profiles disappear, leaving only the correct one in place; this profile will also be renamed to the less ambiguous name "play HiFi music".
-However, this is mostly a cosmetic change, so if in doubt, ignore this boot parameter and just set the duplex profile as shown in the above screenshot.
-
 ### Manual installation
 If you'd rather not run an automated script, follow the steps below to install everything manually; these are functionally equivalent to the install wizard.
 
