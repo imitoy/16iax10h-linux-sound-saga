@@ -409,3 +409,7 @@ This project builds upon the Intel audio driver work by Lyapsus, Nadim Kobeissi 
 
 ### mt7927 patch
 All credit goes to [jetm and contributors](https://github.com/jetm/mediatek-mt7927-dkms); I haven’t made any meaningful changes to their work. The only difference between their repo and the contents of my [patches/mt7927](patches/mt7927) folder is that I repackaged the split patches in a single file, since this repo is focused on building a patched kernel rather than upstream review or DKMS packaging.
+
+---
+## License
+Licensed under the GNU General Public License v2.0 only. See [LICENSE](LICENSE).
