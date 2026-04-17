@@ -52,25 +52,14 @@ rpm -ivh kernel-<...>.src.rpm
 ```
 This will create a folder called `rpmbuild` in your home folder. Create a new folder called `kernel`, and copy the contents of both `rpmbuild/SOURCES` and `rpmbuild/SPECS` to the `kernel` folder.
 
-## Step 2: Install the dependencies
+## Step 2: Install the kernel build dependencies
 Before proceeding, ensure the `kernel` folder from the previous step is in your `/home/<user>` folder, as otherwise the build process using `fedpkg` may throw some errors about not being able to find the required files.
-### Kernel build dependencies
+
 Navigate to the `kernel` folder, then type:
 ```bash
 sudo dnf builddep kernel.spec
 ```
 This will install a large number of packages. If you wish to remove these in the future, you can type `dnf history list`, locate the above `dnf builddep` transaction, take note of the number on its left, then do `sudo dnf history undo xy` (where `xy` is the relevant number from `dnf history list`).
-
-### NVIDIA driver
-- Enable the free and nonfree RPMFusion repositories if you haven't already (see details [here](rpmfusion.org/Configuration)):
-```bash
-sudo dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
-```
-- Install the `akmod-nvidia` package if you haven't already:
-```bash
-sudo dnf install akmod-nvidia
-```
-This package will automatically build the NVIDIA driver kernel module for the patched kernel.
 
 ## Step 3: Configure the build process
 ### Copying the patch
