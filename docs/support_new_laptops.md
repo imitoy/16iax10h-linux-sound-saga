@@ -1,6 +1,6 @@
 # How to open an issue to add support for new IDs
 
-If you believe that your laptop could benefit from the driver contained in this patch (for example, because you found the matching `AWDZ8399.bin` file in the Windows driver, as described in the readme), open an issue clearly stating the information you can collect with the steps below.
+If you believe that your laptop could benefit from the driver contained in this patch (i.e. you found the matching `AWDZ8399.bin` file in the Windows driver, as described in the readme), open an issue clearly stating the information you can collect with the steps below.
 
 I can then try adding support for your machine by including its PCI ID, but I make no promises it will work.
 
@@ -82,3 +82,21 @@ If you have access to Windows on your machine (e.g. on a separate drive), please
 2. Make sure all external audio devices (headphones, microphones, etc.) are unplugged; then, ensure that both the speakers and microphone sliders are set to 100% in the Windows settings.
 3. Run the `.exe` from the extracted folder. If Windows shows popups warning about memory access (this is a known cosmetic issue with this tool on Windows 11, not an actual security threat), know that it's safe to simply close them.
 4. Wait for a few seconds, until a new window pops up informing you that the codec dump was completed. You can then close the tool and grab the newly created `.txt` file you'll find with the same name as the `.exe` and in the same folder. Attach this file to your issue.
+
+---
+
+## Testing the updated patch
+Once I receive the above information, I will add the IDs of your laptop and provide you with an extended patch to try. If you're a Fedora user and need help with kernel compilation, I can compile the new RPMs for you (in which case, kindly ask for this in your first post in the issue).
+
+Once you're running the patched kernel, you must perform the following diagnostics:
+
+1. Check that audio works as expected;
+2. Check that the speakers' left/right channels are correctly set and not swapped;
+3. Copy the output of these commands:
+```bash
+sudo dmesg | grep -i aw88399
+sudo cat /sys/kernel/debug/regmap/i2c-AWDZ8399:00-aw88399-hda.0/registers
+sudo cat /sys/kernel/debug/regmap/i2c-AWDZ8399:00-aw88399-hda.1/registers
+```
+
+Then upload this information in your reply in the issue.
