@@ -3,7 +3,7 @@
 
 > Patched Linux audio drivers for Lenovo Legion Pro 7/7i Gen 10 (AMD & Intel). Includes Fedora RPM packages and installation automation. [mt7927 community patch](https://github.com/jetm/mediatek-mt7927-dkms) also included to enable Wi-Fi and Bluetooth on the AMD model.
 
-Recent Lenovo Legion laptops control their woofers using the AWDZ88399 Smart Amp via i2c bus, in a setup that requires an HDA side codec driver which currently doesn't exist in the mainline Linux kernel. Due to this, on the current stock Linux kernel, the woofers don't work, and as a result the speakers lack bass and overall sound quiet and tinny.
+Recent Lenovo Legion laptops drive their woofers using the AWDZ88399 Smart Amp via I2C bus as side codecs to a Realtek ALC287 HDA codec, in a setup that requires a driver which currently doesn't exist in the mainline Linux kernel. Due to this, on the current stock Linux kernel, the woofers don't work, and as a result the speakers lack bass and overall sound quiet and tinny.
 This repository provides kernel patches and pre-built RPM packages to restore full audio functionality.
 
 **Supported Models**
@@ -347,7 +347,7 @@ As I've only tested everything on Fedora 43 KDE, I can't make any guarantees. If
 ### Will this patch work on other laptops?
 This patch has two components:
 
-1. *AW88399 HDA side codec driver:* The AW88399 is a smart amplifier used to drive the woofers; on some laptops, this happens via I2C bus, in a setup which requires an HDA side codec driver that is currently missing from the mainline Linux kernel. This part of the patch adds that missing driver, and is in principle useful for any laptop using this chip in this configuration, regardless of manufacturer or model.
+1. *AW88399 HDA side codec driver:* The AW88399 is a smart amplifier used to drive the woofers on the supported Legions; in particular, this happens via I2C bus as side codecs to a Realtek ALC287 HDA codec, and this setup requires a driver that is currently missing from the mainline Linux kernel. This part of the patch adds that missing driver, and is in principle useful for any laptop using this chip in this configuration, regardless of manufacturer or model.
 
 2. *PCI subsystem ID quirk:* The kernel needs to know which laptops use this setup in order to load the right driver and firmware at boot. This is done via a quirk entry specific to each laptop model, identified by its PCI subsystem ID. This is the part that must be added on a per-model basis, and is what determines whether a given laptop is "supported" by this patch: without the correct quirk entry, even a laptop that would benefit from the new driver will never use it, because the kernel doesn't know that it is supposed to load it on that specific model.
 
@@ -377,7 +377,7 @@ sudo dnf install innoextract
 ```bash
    sha256sum <path/to/AWDZ8399.bin>
 ```
-   Compare this against [`firmware/aw88399/aw88399_acf.bin.sha256`](firmware/aw88399/aw88399_acf.bin.sha256). A match means your laptop uses the exact same firmware, which is a strong indicator the patch will work. A mismatch means your laptop may use a different variant of the chip with different firmware, in which case the patch may still apply, but this is uncharted territory.
+   Compare this against [`firmware/aw88399/aw88399_acf.bin.sha256`](firmware/aw88399/aw88399_acf.bin.sha256). A match means your laptop uses the exact same firmware, which is a strong indicator the patch will work. A mismatch means your laptop may use a different variant of the chip with different firmware, in which case the patch may still apply, but this is uncharted territory. That said, official Awinic code implies that [only one firmware version exists](https://github.com/torvalds/linux/blob/faeab166167f5787719eb8683661fd41a3bb1514/sound/soc/codecs/aw88399.h#L510), so it's basically guaranteed you'll get a checksum match.
 
 If you do find the `AWDZ8399.bin` firmware, and its checksum matches, please open an issue clearly stating the information collected using [this guide](docs/support_new_laptops.md).
 
