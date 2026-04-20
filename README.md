@@ -165,13 +165,10 @@ For systemd-boot, create a new boot entry in `/boot/loader/entries/arch-16iax10h
 title   Arch Linux (16IAX10H Audio)
 linux   /vmlinuz-linux-16iax10h-audio
 initrd  /initramfs-linux-16iax10h-audio.img
-options root=PARTUUID=your-root-partition-uuid rw snd_intel_dspcfg.dsp_driver=3
+options root=PARTUUID=your-root-partition-uuid rw
 ```
 
 Replace `your-root-partition-uuid` with your actual root partition UUID (find it by running `blkid`).
-
-**Note:** You must include `snd_intel_dspcfg.dsp_driver=3` in your kernel boot parameters. For some devices however, such as the Legion Y9000P, `snd_intel_dspcfg.dsp_driver=1` works instead.
-
 </details>
 
 <details>
@@ -195,13 +192,10 @@ For systemd-boot, create a new boot entry in `/boot/loader/entries/fedora-16iax1
 title   Fedora Linux (16IAX10H Audio)
 linux   /vmlinuz-linux-16iax10h-audio
 initrd  /initramfs-linux-16iax10h-audio.img
-options root=UUID=your-root-partition-uuid rw snd_intel_dspcfg.dsp_driver=3
+options root=UUID=your-root-partition-uuid rw
 ```
 
 Replace `your-root-partition-uuid` with your actual root partition UUID (find it by running `blkid`).
-
-**Note:** You must include `snd_intel_dspcfg.dsp_driver=3` in your kernel boot parameters. For some devices however, such as the Legion Y9000P, `snd_intel_dspcfg.dsp_driver=1` works instead.
-
 </details>
 
 ## Step 8: Reboot into the Patched Kernel
