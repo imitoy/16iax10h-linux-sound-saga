@@ -377,7 +377,8 @@ sudo dnf install innoextract
 ```bash
    sha256sum <path/to/AWDZ8399.bin>
 ```
-   Compare this against [`firmware/aw88399/aw88399_acf.bin.sha256`](firmware/aw88399/aw88399_acf.bin.sha256). A match means your laptop uses the exact same firmware, which is a strong indicator the patch will work. A mismatch means your laptop may use a different variant of the chip with different firmware, in which case the patch may still apply, but this is uncharted territory. That said, official Awinic code implies that [only one firmware version exists](https://github.com/torvalds/linux/blob/faeab166167f5787719eb8683661fd41a3bb1514/sound/soc/codecs/aw88399.h#L510), so it's basically guaranteed you'll get a checksum match.
+   Compare this against [`firmware/aw88399/aw88399_acf.bin.sha256`](firmware/aw88399/aw88399_acf.bin.sha256). A match means your laptop uses the exact same firmware, which is a strong indicator the patch will work. A mismatch means your laptop uses a different variant of the chip with different firmware, in which case the patch may still apply, but this is uncharted territory.
+   To be more specific: Awinic drivers [hardcode the firmware name](https://github.com/torvalds/linux/blob/faeab166167f5787719eb8683661fd41a3bb1514/sound/soc/codecs/aw88399.h#L510), even when the actual firmware differs. This means that the driver in this patch will happily use any file called `aw88399_acf.bin` and placed in `/lib/firmware`; this means two things. The good news is that even a different firmware can potentially work OOTB with this driver, but the bad one is that each device needs its own firmware and we cannot fully guarantee things will work out equally for differently customized firmware binaries.
 
 If you do find the `AWDZ8399.bin` firmware, and its checksum matches, please open an issue clearly stating the information collected using [this guide](docs/support_new_laptops.md).
 

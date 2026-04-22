@@ -1,6 +1,6 @@
 # How to open an issue to add support for new IDs
 
-If you believe that your laptop could benefit from the driver contained in this patch (i.e. you found the matching `AWDZ8399.bin` file in the Windows driver, as described in the readme), open an issue clearly stating the information you can collect with the steps below.
+If you believe that your laptop could benefit from the driver contained in this patch (i.e. you found the `AWDZ8399.bin` file in the Windows driver with a matching checksum, as described in the readme), open an issue clearly stating the information you can collect with the steps below.
 
 I can then try adding support for your machine by including its PCI ID, but I make no promises it will work.
 
