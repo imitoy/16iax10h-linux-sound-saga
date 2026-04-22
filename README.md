@@ -351,9 +351,9 @@ This patch has two components:
 
 2. *PCI subsystem ID quirk:* The kernel needs to know which laptops use this setup in order to load the right driver and firmware at boot. This is done via a quirk entry specific to each laptop model, identified by its PCI subsystem ID. This is the part that must be added on a per-model basis, and is what determines whether a given laptop is "supported" by this patch: without the correct quirk entry, even a laptop that would benefit from the new driver will never use it, because the kernel doesn't know that it is supposed to load it on that specific model.
 
-If your laptop's woofers don't work on Linux, it may be tempting to try this patch, but broken woofers can have many causes, and this patch only fixes this specific hardware configuration. Having said that, if your laptop uses the same AW88399 smart amp, there is a real chance it could benefit from this patch once a quirk entry is added for your model; indeed, the AW88399 chip with other hardware configurations is already supported in the Linux kernel, so if you have the AW88399 but your woofers are still broken, this patch may apply.
+If your laptop's woofers don't work on Linux, it may be tempting to try this patch, but broken woofers can have many causes, and this patch only fixes this specific hardware configuration. Having said that, if your laptop uses the same AW88399 smart amp in the same configuration, there is a real chance it could benefit from this patch once a quirk entry is added for your model.
 
-To check if your laptop contains the AW88399 smart amp chip, follow the steps below. Please know that these instructions are not foolproof (you may need a more thorough independent hardware investigation), and that they likely apply mostly to related Lenovo laptops (for example, other Gen 10 Legions, or Legion Pro 7 models from other generations).
+To check if your laptop contains the AW88399 smart amp chip, follow the steps below (but please note that you may need a more thorough independent hardware investigation). These instructions likely apply mostly to related Lenovo laptops (for example, other Gen 10 Legions, or Legion Pro 7 models from other generations); other models or manufacturers may require more involved ways to extract the required files from the Windows driver.
 
 **To check if your laptop uses the AW88399:**
 1. Download the Windows audio driver for your laptop from the manufacturer's website. For example, you can download Lenovo drivers from [this website](https://pcsupport.lenovo.com).
@@ -371,7 +371,7 @@ sudo dnf install innoextract
 ```bash
    find . -name "AWDZ8399.bin"
 ```
-   If the file is found, your laptop uses the AW88399.
+   If the file is found, your laptop uses the AW88399. As the file may have a different name, even if the `find` command above fails, look around the extracted folders anyway looking for a binary firmware file with a similar name (especially if this binary is inside a folder whose name contains "Awinic").
    
 5. Compute its sha256 checksum:
 ```bash
@@ -382,7 +382,7 @@ sudo dnf install innoextract
 
 If you do find the `AWDZ8399.bin` firmware, and its checksum matches, please open an issue clearly stating the information collected using [this guide](docs/support_new_laptops.md).
 
-I can then try adding support for your device by adding its ID (but I make no promises this will work).
+I can then try adding support for your device by adding its ID (but I make no promises this will work). To be more precise: adding the ID may not be enough, as the Legion Pro 7 models currently supported by this patch also require specific tweaks regarding the realtek codec side, and other fixes may apply to your model. The guide linked above contains informations to collect diagnostics on whether the same quirks apply or not.
 
 ---
 ## Credits
