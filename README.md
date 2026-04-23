@@ -16,7 +16,9 @@ This repository provides kernel patches and pre-built RPM packages to restore fu
 - Legion 5 Gen 10 (16IAX10/16IAX10H) - Intel
 - Legion 7 Gen 10 (16IAX10/16IAX10H) - Intel
 
-If you own one of the laptops above, it's quite likely that this patch could apply, but some extra work may be needed. Other Legion models may also benefit from this patch despite being currently unsupported; for example, [Nadim's repo](https://github.com/nadimkobeissi/16iax10h-linux-sound-saga) contains some examples of this. To check if this patch applies to your laptop (Lenovo Legion or otherwise), read step 0 of the "manual install" section and the "Will this patch work on other laptops?" FAQ entry below.
+If you own one of the laptops above, it's quite likely that I can add support for it, but I need more information from the device itself. Please read the "Will this patch work on other laptops?" FAQ entry, then open an issue using the instructions from [this guide](docs/support_new_laptops.md).
+
+Other Legion models may also benefit from this patch despite being currently unsupported; for example, [Nadim's repo](https://github.com/nadimkobeissi/16iax10h-linux-sound-saga) contains some examples of this. To check if this patch applies to your laptop (Lenovo Legion or otherwise), read step 0 of the "manual install" section and the "Will this patch work on other laptops?" FAQ entry below.
 
 **Credits & Attributions**
 
