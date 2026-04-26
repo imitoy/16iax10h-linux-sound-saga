@@ -30,7 +30,7 @@ die()     { echo -e "${RED}${BOLD}[ERR ]${RESET}  $*" >&2; exit 1; }
 heading() { echo -e "\n${BOLD}===  $*  ===${RESET}"; }
 
 GITHUB_REPO="marco-giunta/legion-pro7-gen10-audio"
-GITHUB_API="https://api.github.com/repos/${GITHUB_REPO}/releases/latest"
+GITHUB_API="https://api.github.com/repos/${GITHUB_REPO}/releases"
 RAW_BASE="https://raw.githubusercontent.com/${GITHUB_REPO}/legion_audio"
 
 # Firmware paths
@@ -215,14 +215,16 @@ fi
 
 # Step 3: Download & install the patched kernel RPMs
 heading "Step 3: Download and install the patched kernel RPMs"
-info "Fetching latest release metadata from GitHub..."
+FEDORA_VER=$(rpm -E '%fedora')
+info "Fetching latest release metadata from GitHub for Fedora ${FEDORA_VER}..."
 TARBALL_URL=$(curl -fsSL "${GITHUB_API}" \
     | grep -oP '"browser_download_url": *"\K[^"]+\.tar\.gz(?=")' \
+    | grep "fc${FEDORA_VER}" \
     | grep -v '\.sha256' \
     | head -1)
 SHA_URL="${TARBALL_URL}.sha256"
 
-[[ -n "${TARBALL_URL}" ]] || die "Could not determine tarball URL from GitHub API."
+[[ -n "${TARBALL_URL}" ]] || die "No release found for Fedora ${FEDORA_VER}. Check the releases page at https://github.com/${GITHUB_REPO}/releases"
 
 TARBALL_NAME=$(basename "${TARBALL_URL}")
 info "Latest release: ${TARBALL_NAME}"
