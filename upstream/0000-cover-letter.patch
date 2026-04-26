@@ -1,0 +1,96 @@
+From 2f9bd7e8206f2544cb124b5771b40324884cbab6 Mon Sep 17 00:00:00 2001
+From: Marco Giunta <marco_giunta@outlook.it>
+Date: Sat, 25 Apr 2026 14:23:50 +0200
+Subject: [PATCH 0/7] ALSA: hda: Add AW88399 HDA side codec driver for Lenovo Legion
+
+Several Lenovo Legion Pro 7 laptops (16IAX10H Intel, 16AFR10H AMD)
+use AWINIC AW88399 smart amplifiers to drive their bass woofers,
+connected via I2C as side codecs to a Realtek ALC287 HDA codec.
+Without this driver, only the tweeters produce sound, resulting in
+quiet and tinny audio.
+
+An ASoC driver for the AW88399 already exists in-tree
+(sound/soc/codecs/aw88399.c), contributed by AWINIC, but it targets
+I2S/TDM topologies and cannot drive the chip when it sits behind an
+HDA controller. This series adds a proper HDA side codec driver,
+following the established pattern used by the CS35L41 and TAS2781 drivers.
+
+Patch 1 extracts the device-level functions from the existing ASoC
+driver into a shared library module (SND_SOC_AW88399_LIB), following
+the CS35L41 precedent (SND_SOC_CS35L41_LIB). This decouples the HDA
+driver's Kconfig dependency from the full ASoC codec module, preventing
+a binding race where the ASoC I2C driver could claim
+serial-multi-instantiate devices before the HDA driver.
+
+Patch 2 adds missing return value checks in the library code.
+
+Patches 3 and 4 prepare the shared library for use on ACPI-based HDA
+systems: patch 3 extends channel assignment to work without Device
+Tree properties, and patch 4 adds a per-instance flag to bypass an
+unreliable hardware status bit on certain boards.
+
+Patch 5 registers the AWINIC ACPI HID (AWDZ8399) with the ACPI scan
+ignore list and the serial-multi-instantiate driver for correct
+enumeration of the two amplifier instances.
+
+Patch 6 adds the HDA side codec driver itself, structured after the
+CS35L41 HDA driver: an I2C bus driver, a core driver with playback
+hooks and power management, and a property driver providing per-model
+quirk infrastructure using ACPI subsystem ID matching.
+
+Patch 7 enables the driver on Lenovo Legion Pro 7 models by adding
+the necessary Realtek ALC287 fixups (DAC rerouting for bass speaker
+volume control, internal microphone calibration) and AW88399 property
+quirks (I2C channel swap correction, BSTS status check bypass).
+
+NOTE ON FIRMWARE: This driver requires the firmware file
+aw88399_acf.bin, which uses the same format and request path as the
+existing ASoC driver. This firmware is not yet available in the
+linux-firmware repository. We intend to coordinate with the AWINIC
+maintainers (CC'd) to arrange its inclusion. In the meantime, users
+can extract the firmware from the Windows driver and place it in
+/lib/firmware/.
+
+This work builds on the initial driver development by Yakov Till
+("Lyapsus") and the bounty effort organized by Nadim Kobeissi:
+https://github.com/nadimkobeissi/16iax10h-linux-sound-saga
+
+Marco Giunta (7):
+  ASoC: aw88399: extract shared device library
+  ASoC: aw88399: check return values in aw_dev_check_sram
+  ASoC: aw88399: derive channel from I2C address on ACPI systems
+  ASoC: aw88399: add per-instance BSTS status bypass flag
+  ACPI/platform: add AWDZ8399 to serial-multi-instantiate
+  ALSA: hda/scodec: add AW88399 HDA side codec driver
+  ALSA: hda/realtek: enable AW88399 on Lenovo Legion Pro 7
+
+ drivers/acpi/scan.c                           |    1 +
+ .../platform/x86/serial-multi-instantiate.c   |   10 +
+ sound/hda/codecs/realtek/alc269.c             |   45 +
+ sound/hda/codecs/side-codecs/Kconfig          |   21 +
+ sound/hda/codecs/side-codecs/Makefile         |    4 +
+ sound/hda/codecs/side-codecs/aw88399_hda.c    |  485 ++++++
+ sound/hda/codecs/side-codecs/aw88399_hda.h    |   50 +
+ .../hda/codecs/side-codecs/aw88399_hda_i2c.c  |   62 +
+ .../codecs/side-codecs/aw88399_hda_property.c |   79 +
+ .../codecs/side-codecs/aw88399_hda_property.h |   17 +
+ sound/soc/codecs/Kconfig                      |    5 +
+ sound/soc/codecs/Makefile                     |    2 +
+ sound/soc/codecs/aw88399-lib.c                | 1397 +++++++++++++++++
+ sound/soc/codecs/aw88399-lib.h                |   41 +
+ sound/soc/codecs/aw88399.c                    | 1328 +---------------
+ sound/soc/codecs/aw88399.h                    |   14 -
+ 16 files changed, 2220 insertions(+), 1341 deletions(-)
+ create mode 100644 sound/hda/codecs/side-codecs/aw88399_hda.c
+ create mode 100644 sound/hda/codecs/side-codecs/aw88399_hda.h
+ create mode 100644 sound/hda/codecs/side-codecs/aw88399_hda_i2c.c
+ create mode 100644 sound/hda/codecs/side-codecs/aw88399_hda_property.c
+ create mode 100644 sound/hda/codecs/side-codecs/aw88399_hda_property.h
+ create mode 100644 sound/soc/codecs/aw88399-lib.c
+ create mode 100644 sound/soc/codecs/aw88399-lib.h
+
+
+base-commit: 876c495d412ef67bd4d0bdc4b74b0bd3d9f4e890
+-- 
+2.53.0
+
