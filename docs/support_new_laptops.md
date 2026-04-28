@@ -66,7 +66,9 @@ For example, on the supported Legion Pro 7/7i models, on the *unpatched* kernel 
 arecord -d 5 -f cd -t wav /tmp/mic_test.wav && aplay /tmp/mic_test.wav
 ```
 
-- If you were not able to identify a "mic boost volume" node whose `Amp-In Vals` respond to you moving the OS mic slider, simply perform this recording quality test in 1/4 increments: 25%, 50%, 75%, and 100% mic levels. Notice that, instead of the `arecord` and `aplay` terminal commands, you can also use a recorder app, but please only use *simple* ones like the GNOME recorder or KRecord; live monitoring apps like Audacity or Reaper may invalidate the test's results because they can trigger the [screaming speakers issue](../README.md#screaming-speakers-issue), a hardware limitation present on some models for which a software fix is currently unavailable.
+- If you were not able to identify a "mic boost volume" node whose `Amp-In Vals` respond to you moving the OS mic slider, simply perform this recording quality test in 1/4 increments: 25%, 50%, 75%, and 100% mic levels.
+
+Notice that, instead of the `arecord` and `aplay` terminal commands, you can also use a recorder app, but please only use *simple* ones like the GNOME recorder or KRecord; live monitoring apps like Audacity or Reaper may invalidate the test's results because they can trigger the [screaming speakers issue](../README.md#screaming-speakers-issue), a hardware limitation present on some models for which a software fix is currently unavailable.
 
 In your issue, report:
 - The OS volume percentages at which each boost level transition occurs
@@ -86,7 +88,7 @@ If you have access to Windows on your machine (e.g. on a separate drive), please
 ---
 
 ## Testing the updated patch
-Once I receive the above information, I will add the IDs of your laptop and provide you with an extended patch to try. If you're a Fedora user and need help with kernel compilation, I can compile the new RPMs for you (in which case, kindly ask for this in your first post in the issue).
+Once I receive the above information, I will add the IDs of your laptop and provide you with an extended patch to try. If you're a Fedora user and need help with kernel compilation, I can compile the new RPMs for you - in which case, kindly ask for this in your first post in the issue, specifying which Fedora version you're running.
 
 Once you're running the patched kernel, you must perform the following diagnostics:
 
@@ -95,6 +97,8 @@ Once you're running the patched kernel, you must perform the following diagnosti
 3. Copy the output of these commands:
 ```bash
 sudo dmesg | grep -i aw88399
+sudo dmesg | grep -i alc269
+# run the following 2 commands while some music is playing on the speakers
 sudo cat /sys/kernel/debug/regmap/i2c-AWDZ8399:00-aw88399-hda.0/registers
 sudo cat /sys/kernel/debug/regmap/i2c-AWDZ8399:00-aw88399-hda.1/registers
 ```
