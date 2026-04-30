@@ -4,11 +4,11 @@ on:
     workflow_dispatch:
         inputs:
             fedora_version:
-                description: 'Fedora version to build for (e.g. 43)'
+                description: 'Fedora version to build for (e.g. 44)'
                 required: true
-                default: '43'
+                default: '44'
             kernel_version:
-                description: 'Specific kernel to use via koji (e.g. kernel-6.19.9-200.fc43)'
+                description: 'Specific kernel to use via koji (e.g. kernel-6.19.14-300.fc44)'
                 required: false
                 default: ''
             patch_version:
@@ -23,10 +23,10 @@ jobs:
     build:
         runs-on: ubuntu-latest
         container:
-            image: fedora:${{ github.event.inputs.fedora_version || '43'}}
+            image: fedora:${{ github.event.inputs.fedora_version || '44'}}
 
         env:
-            FEDORA_VERSION: ${{ github.event.inputs.fedora_version || '43'}}
+            FEDORA_VERSION: ${{ github.event.inputs.fedora_version || '44'}}
             KERNEL_VERSION: ${{ github.event.inputs.kernel_version || ''}}
             PATCH_VERSION:  ${{ github.event.inputs.patch_version  || ''}}
             BUILD_ID:       ${{ github.event.inputs.build_id || 'legion'}}
