@@ -1,3 +1,8 @@
+# Folder structure
+
+- `series/`: Individual iterations of the patch series (see changelog below). Each subfolder (e.g. `v0.1/`, `v0.2/`) contains the multi-file patch set for that version (including commit messages and cover letters).
+- `combined/`: Single-file versions of each series iteration. These are combined patches applied to a specific kernel release (e.g., v6.19.14), to make it easy to test the series with `git apply` or `patch -p1`.
+
 # Changelog
 
 ## v0.2
