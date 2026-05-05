@@ -6,6 +6,8 @@
 # Changelog
 
 ## v0.2
+See [here](https://github.com/nadimkobeissi/16iax10h-linux-sound-saga/issues/55#issuecomment-4381559698) for more informations.
+
 - Reworked patch 1 to introduce a common header at `include/sound/aw88399.h`. This file includes all the definitions from the original `sound/soc/codecs/aw88399.h` not strictly related to ASoC. As a result, `sound/soc/codecs/aw88399-lib.h` has been removed, `sound/soc/codecs/aw88399.h` heavily depleted, and most of the ugly imports in `sound/hda/codecs/side-codecs/aw88399_hda.c` have been removed in favor of a single `#include <sound/aw88399.h>` in `sound/hda/codecs/side-codecs/aw88399_hda.h`.
 - Added `Tested-by: Nadim Kobeissi <nadim@symbolic.software>`.
 - Rebased the patch series on commit `fac9a31701803e4e41fdb7b5c71582c65cf47176` from `tiwai/sound`.
