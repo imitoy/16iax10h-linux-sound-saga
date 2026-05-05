@@ -1443,8 +1443,8 @@ diff -rupN linux-6.19.14/sound/hda/codecs/side-codecs/aw88399_hda_property.h lin
 + * Author: Marco Giunta
 + */
 +
-+#ifndef AW88399_HDA_PROP_H
-+#define AW88399_HDA_PROP_H
++#ifndef __AW88399_HDA_PROP_H__
++#define __AW88399_HDA_PROP_H__
 +
 +#include "aw88399_hda.h"
 +

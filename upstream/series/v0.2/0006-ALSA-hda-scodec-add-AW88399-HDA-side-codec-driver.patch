@@ -772,8 +772,8 @@ index 000000000000..5b932aad0690
 + * Author: Marco Giunta
 + */
 +
-+#ifndef AW88399_HDA_PROP_H
-+#define AW88399_HDA_PROP_H
++#ifndef __AW88399_HDA_PROP_H__
++#define __AW88399_HDA_PROP_H__
 +
 +#include "aw88399_hda.h"
 +
