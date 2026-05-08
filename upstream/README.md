@@ -5,6 +5,17 @@
 
 # Changelog
 
+## v0.2.1
+
+- In `alc269.c`, separated the `SND_PCI_QUIRK` entry for the Lenovo Legion Y9000P IAX10 (realtek PCI SSID `0x3d6c`) from the Legion Pro 7i 16IAX10H (`0x3907`). Tester logs confirmed that the Y9000P uses PCI SSID `0x3d6c` but ACPI SSID `17AA3907` for the AW88399, so the realtek quirk table needs a separate entry while the property table does not. This also fixes checkpatch line-length warning caused by the previous combined quirk table entry.
+- Removed `17AA3D6C` from the AW88399 property table, as no machine has actually been observed to use it as an ACPI subsystem ID.
+- Added `Tested-by: Xia Yun'an <imitoy@imitoy.top>` (Lenovo Legion Y9000P IAX10, kernel 7.0.3, Arch Linux).
+- Consistent include guard style in `aw88399_hda_property.h` (fixed missing double underscores). Also backported to v0.2.
+- Changed include guard in `include/sound/aw88399.h` to `__SOUND_AW88399_H`.
+- In `aw88399-lib.c`, changed `MODULE_DESCRIPTION` from `AW88399 library` to `AW88399 common device library`.
+- In `aw88399-lib.c`, changed `MODULE_LICENSE` from the original `"GPL v2"` to `"GPL"` to fix warning from `scripts/checkpatch.pl`.
+- Rebased on commit `b8dc547edf9e41474d8ce2dcf344e8e75b17781a` from `tiwai/sound`.
+
 ## v0.2
 See [here](https://github.com/nadimkobeissi/16iax10h-linux-sound-saga/issues/55#issuecomment-4381559698) for more informations.
 
