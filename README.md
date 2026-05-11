@@ -49,7 +49,9 @@ More generally, Claude was part of how I learned (alongside reading documentatio
 ### Patched kernel RPMs compatibility
 The install instructions below assume you're using Fedora and installing the patched kernel using the prebuilt RPMs from this repo. If you're on a different Linux distro or prefer to compile your own kernel RPMs, see the FAQ for manual patching instructions.
 
-The automated install script only supports stock Fedora. On Fedora derivatives, the manual install instructions should still work, but you may need to adapt the steps described there.
+The automated install script supports stock Fedora. On Fedora derivatives (such as Nobara), the script will still install the patched kernel and the aw88399 firmware, but will skip the NVIDIA driver step, as derivatives typically manage their own driver stack. In that case, you may need to rebuild your NVIDIA drivers manually after rebooting into the patched kernel.
+
+Alternatively, for Fedora derivatives, the manual install instructions should still work, but you may need to adapt the steps.
 
 ### Secure Boot 
 The precompiled kernel distributed in this repo is unsigned, unlike the stock Fedora one. If Secure Boot is enabled, attempting to boot the patched kernel from GRUB will result in a black screen. 
@@ -339,12 +341,11 @@ To find out which is it, follow these steps in order.
 These steps disable GPU mode setting entirely. If the OS boots with this parameter, the issue is driver related. In this case, boot back into the stock kernel and run `sudo akmods --force` to check whether the NVIDIA driver built correctly for the patched kernel, then reboot and try starting the patched kernel from the GRUB menu again.
 Please note that changes to the boot parameters made using the steps above are temporary and are reset at every reboot, so to test if rebuilding the driver worked, you don't have to manually remove the `nomodeset` parameter; booting normally suffices.
 
+### Fedora derivatives
+On mutable Fedora derivatives such as Nobara, the automated install script will work for the kernel and firmware steps but will skip the NVIDIA driver installation, as these distros typically ship their own driver stack. At least one user has [successfully installed the patch on Nobara 43](https://github.com/nadimkobeissi/16iax10h-linux-sound-saga/issues/55#issuecomment-4416042264); if you try it on a derivative and it works, please open an issue and share what you did.
+
 ### Immutable Fedora spins and derivatives
-It should be possible to use the patched kernel on immutable distributions by installing the RPMs with `rpm-ostree` instead of `dnf`. However, a proper setup will likely require rebasing your image to include both the patched kernel and the necessary firmware binaries. While the former is likely achievable with `rpm-ostree`, the latter is less straightforward and not something I have explored.
-
-Similarly, the steps in the [self-compile guide](docs/self_compile.md) should work if performed inside a container.
-
-As I've only tested everything on Fedora 43 KDE, I can't make any guarantees. If you're on a distro like Bazzite, feel free to try it out, and if you do get it working, please open an issue and share what you did so I can update the main guide!
+It should be possible to use the patched kernel on immutable distributions by installing the RPMs with `rpm-ostree` instead of `dnf`. However, a proper setup will likely require rebasing your image to include both the patched kernel and the necessary firmware binaries. While the former is likely achievable with `rpm-ostree`, the latter is less straightforward and not something I have explored. Similarly, the steps in the [self-compile guide](docs/self_compile.md) should work if performed inside a container. If you're on a distro like Bazzite, feel free to try it out, and if you do get it working, please open an issue and share what you did so I can update the main guide!
 
 ### Will this patch work on other laptops?
 This patch has two components:

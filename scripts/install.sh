@@ -106,8 +106,18 @@ require_supported_device() {
     die "Unsupported device -> automated install aborted."
 }
 
+is_fedora_derivative() {
+    [[ "$(lsb_release -si)" != "Fedora" ]]
+}
+
 require_fedora() {
-    grep -qi "fedora" /etc/os-release || die "This script is only for Fedora Linux!"
+    # Check for RPM-based system as minimum requirement
+    command -v dnf &>/dev/null || die "This script requires a dnf-based Linux system (Fedora and derivatives)!"
+    if is_fedora_derivative; then
+        warn "This distro does not appear to be vanilla Fedora."
+        warn "The script will proceed but the NVIDIA driver installation step will be skipped."
+        warn "Please ensure your NVIDIA drivers support the patched kernel manually."
+    fi
 }
 
 require_root() {
@@ -142,6 +152,7 @@ echo    "Repository : ${GITHUB_REPO}"
 echo
 
 require_supported_device
+require_cmd lsb_release
 require_fedora
 require_root
 require_cmd curl
@@ -201,7 +212,12 @@ fi
 # Step 2: akmod-nvidia
 heading "Step 2: Install the NVIDIA driver builder (akmod-nvidia)"
 
-if rpm -q akmod-nvidia &>/dev/null; then
+if is_fedora_derivative; then
+    warn "Skipping akmod-nvidia install on non-vanilla Fedora."
+    warn "Your distro likely manages NVIDIA drivers separately."
+    warn "After rebooting into the patched kernel, verify your NVIDIA drivers"
+    warn "still work and rebuild them if needed."
+elif rpm -q akmod-nvidia &>/dev/null; then
     ok "akmod-nvidia is already installed - skipping."
 else
     info "Enabling RPM Fusion free + nonfree repositories..."
@@ -255,8 +271,14 @@ ok "Kernel RPMs installed."
 # Step 4: post install
 heading "Step 4 - Building NVIDIA driver module"
 
-info "Triggering akmods build for the new kernel..."
-sudo akmods --force || warn "akmods --force exited non-zero; the build may still be in progress."
+if is_fedora_derivative; then
+    warn "Skipping akmods build on non-vanilla Fedora."
+    warn "Please ensure your NVIDIA drivers are rebuilt for the patched kernel"
+    warn "using whatever method your distro provides before rebooting."
+else
+    info "Triggering akmods build for the new kernel..."
+    sudo akmods --force || warn "akmods --force exited non-zero; the build may still be in progress."
+fi
 
 heading "Installation complete"
 echo
