@@ -1,10 +1,10 @@
 From 57ce3506970131f13547063ac9fce2ecd7c1d2bd Mon Sep 17 00:00:00 2001
 From: Marco Giunta <marco_giunta@outlook.it>
 Date: Tue, 12 May 2026 14:47:15 +0200
-Subject: [PATCH 7/7] ALSA: hda/realtek: enable AW88399 on Lenovo Legion Pro 7
+Subject: [PATCH 7/7] ALSA: hda/realtek: enable AW88399 on Lenovo Legion Pro 5/7
 
 Enable audio output through the AW88399 woofer amplifiers on Lenovo
-Legion Pro 7 laptops by adding the necessary Realtek ALC287 fixups
+Legion Pro 5/7 laptops by adding the necessary Realtek ALC287 fixups
 and AW88399 property quirks.
 
 Realtek fixups (alc269.c):
