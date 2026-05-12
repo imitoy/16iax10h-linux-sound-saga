@@ -54,7 +54,7 @@ is_amd_model() {
 }
 
 # Prerequisites helpers
-SUPPORTED_SSIDS=("17aa3906" "17aa3907" "17aa3d6c" "17aa3938" "17aa3939")
+SUPPORTED_SSIDS=("17aa3906" "17aa3907" "17aa3908" "17aa3938" "17aa3939" "17aa3d6c")
 require_supported_device() {
     # Check manufacturer
     [[ "$(cat /sys/class/dmi/id/sys_vendor 2>/dev/null)" == "LENOVO" ]] \
@@ -80,9 +80,10 @@ require_supported_device() {
     warn ""
     # Exact matches for known supported commercial names -> unknown revision
     if [[ "${product_family}" == "Legion Pro 7 16AFR10H" ]] || \
+       [[ "${product_family}" == "Legion Pro 5 16IAX10H" ]] || \
        [[ "${product_family}" == "Legion Pro 7 16IAX10H" ]] || \
        [[ "${product_family}" == "Legion Pro 7i 16IAX10H" ]]; then
-        warn "Your device appears to be a supported Lenovo Legion Pro 7/7i Gen 10 model,"
+        warn "Your device appears to be a supported Lenovo Legion Pro 5/7/7i Gen 10 model,"
         warn "but with a hardware revision (SSID 0x${ssid}) not yet in the patch."
         warn "Please open an issue at https://github.com/${GITHUB_REPO}/issues"
         warn "and paste this script's output. This will help add support for your laptop."
@@ -147,7 +148,7 @@ CLEANUP_FILES=()
 trap cleanup EXIT
 
 # ─────────────────────────────────────────────────────────────────────────── #
-heading "Legion Pro 7/7i Gen 10 - patched kernel installer"
+heading "Legion Pro 5/7/7i Gen 10 - patched kernel installer"
 echo    "Repository : ${GITHUB_REPO}"
 echo
 

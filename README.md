@@ -1,7 +1,7 @@
-# Legion Pro 7/7i Gen 10 Linux Audio Driver
+# Legion Pro 5/7/7i Gen 10 Linux Audio Driver
 [![Build Patched Kernel RPMs](https://github.com/marco-giunta/legion-pro7-gen10-audio/actions/workflows/build_kernel.yml/badge.svg?event=workflow_dispatch)](https://github.com/marco-giunta/legion-pro7-gen10-audio/actions/workflows/build_kernel.yml)
 
-> Patched Linux audio drivers for Lenovo Legion Pro 7/7i Gen 10 (AMD & Intel). Includes Fedora RPM packages and installation automation. [mt7927 community patch](https://github.com/jetm/mediatek-mt7927-dkms) also included to enable Wi-Fi and Bluetooth on the AMD model.
+> Patched Linux audio drivers for Lenovo Legion Pro 5/7/7i Gen 10 (AMD & Intel). Includes Fedora RPM packages and installation automation. [mt7927 community patch](https://github.com/jetm/mediatek-mt7927-dkms) also included to enable Wi-Fi and Bluetooth on the AMD model.
 
 Recent Lenovo Legion laptops drive their woofers using the AWDZ88399 Smart Amp via I2C bus as side codecs to a Realtek ALC287 HDA codec, in a setup that requires a driver which currently doesn't exist in the mainline Linux kernel. Due to this, on the current stock Linux kernel, the woofers don't work, and as a result the speakers lack bass and overall sound quiet and tinny.
 This repository provides kernel patches and pre-built RPM packages to restore full audio functionality.
@@ -9,10 +9,11 @@ This repository provides kernel patches and pre-built RPM packages to restore fu
 **Supported Models**
 - Lenovo Legion Pro 7i Gen 10 (16IAX10H) - Intel
 - Lenovo Legion Pro 7  Gen 10 (16AFR10H) - AMD
+- *Experimental support*: Legion Pro 5 Gen 10 (16IAX10H) - Intel
 
 **Models potentially supported but not yet verified** *(matching Windows audio firmware confirmed)*
 - Legion Pro 5 Gen 10 (16AFR10) - AMD
-- Legion Pro 5 Gen 10 (16IAX10/16IAX10H) - Intel
+- Legion Pro 5 Gen 10 (16IAX10) - Intel
 - Legion 5 Gen 10 (16IAX10/16IAX10H) - Intel
 - Legion 7 Gen 10 (16IAX10/16IAX10H) - Intel
 
@@ -92,12 +93,13 @@ Check your SSID:
 grep -l "Codec: Realtek" /proc/asound/card*/codec#* | xargs grep -i "Subsystem Id"
 ```
 You should see a line like `Subsystem Id: 0x17aa<...>`, where `<...>` equals 4 characters. These are the IDs currently supported by the patch:
-- `0x17aa3906`, `0x17aa3907`, `0x17aa3d6c` - Legion Pro 7i Gen 10 (16IAX10H, Intel)
+- `0x17aa3906`, `0x17aa3907`, `0x17aa3d6c` - Legion Pro 7i Gen 10 / Y9000P 2025 (16IAX10H / IAX10, Intel)
+- `0x17aa3908` - *Experimental support*: Legion Pro 5 (16IAX10H, Intel)
 - `0x17aa3938`, `0x17aa3939` - Legion Pro 7 Gen 10 (16AFR10H, AMD)
 
 If your ID matches one of these, proceed to step 1.
 
-If your ID is not listed, but your laptop is a `Legion Pro 7 16AFR10H` or `Legion Pro 7i 16IAX10H` (you can confirm this by running `cat /sys/class/dmi/id/product_family`), your Legion has an undiscovered hardware revision. In this case, please open an issue and paste the output of these commands, and I will add the missing SSID to the patch.
+If your ID is not listed, but your laptop is a `Legion Pro 7 16AFR10H`, `Legion Pro 7i 16IAX10H` or `Legion Pro 5 16IAX10H` (you can confirm this by running `cat /sys/class/dmi/id/product_family`), your Legion has an undiscovered hardware revision. In this case, please open an issue and paste the output of these commands, and I will add the missing SSID to the patch.
 
 If you don't get a matching SSID and your laptop is a different model (or even from a different manufacturer), please check the "Will this patch work on other laptops?" FAQ entry.
 
