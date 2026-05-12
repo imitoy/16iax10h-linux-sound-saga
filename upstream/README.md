@@ -5,6 +5,12 @@
 
 # Changelog
 
+## v0.2.2
+
+- Added experimental support for Legion Pro 5 16IAX10H `0x17aa3908` (same realtek and property driver quirks as the Pro 7, `17AA3908` SSID in property driver).
+- Changed name of `0x17aa3d6c` quirk to `"Legion Pro 7i 16IAX10H / Y9000P IAX10"`.
+- Rebased on commit `b8dc547edf9e41474d8ce2dcf344e8e75b17781a` from `tiwai/sound`.
+
 ## v0.2.1
 See [here](https://github.com/nadimkobeissi/16iax10h-linux-sound-saga/issues/55#issuecomment-4410686082) for more informations.
 
