@@ -5,6 +5,15 @@
 
 # Changelog
 
+## v0.2.3
+
+- Add another pincfg override in the realtek fixup: `{ 0x17, 0x90170111 }`. This is needed on the Pro 5 to enable the woofers, as the corresponding pin complex is wrongly reported as unconnected (`Pin Default 0x411111f0`, as reported by tester logs). This matches the pattern of `alc245_fixup_hp_spectre_x360_eu0xxx`, `alc245_fixup_hp_spectre_x360_eu0xxx`, and `alc287_fixup_yoga9_14iap7_bass_spk_pin`. Association `11` ensures no conflicts happen with speakerbar/tweeters node `0x14` (default association `10` on both pro 5 and 7) and headphones node `0x21` (`20` on pro 5, `1f` on pro 7).
+- Add legion aw88399 entry in `alc269_fixup_models` to help debug new devices in the future:
+```c
+{.id = ALC287_FIXUP_LENOVO_LEGION_AW88399, .name = "alc287-lenovo-legion-aw88399"},
+```
+- Updated commit messages to match these changes, plus some slight rewording here and there.
+
 ## v0.2.2
 
 - Added experimental support for Legion Pro 5 16IAX10H `0x17aa3908` (same realtek and property driver quirks as the Pro 7, `17AA3908` SSID in property driver).
