@@ -1386,7 +1386,7 @@ diff -rupN linux-7.0.6/sound/hda/codecs/side-codecs/aw88399_hda_property.c linux
 +	 */
 +	aw88399->channel = 1 - aw88399->channel;
 +	dev_info(aw88399->dev,
-+		 "AW88399 Channel swap applied: index %d -> channel %d\n",
++		 "AW88399: Channel swap applied: index %d -> channel %d\n",
 +		 aw88399->index, aw88399->channel);
 +	return 0;
 +}
@@ -1401,7 +1401,7 @@ diff -rupN linux-7.0.6/sound/hda/codecs/side-codecs/aw88399_hda_property.c linux
 +	 * startup status check to avoid false init failures.
 +	 */
 +	aw88399->bsts_unreliable = true;
-+	dev_info(aw88399->dev, "BSTS status check disabled\n");
++	dev_info(aw88399->dev, "AW88399: BSTS status check disabled\n");
 +	return 0;
 +}
 +

@@ -13,6 +13,7 @@
 {.id = ALC287_FIXUP_LENOVO_LEGION_AW88399, .name = "alc287-lenovo-legion-aw88399"},
 ```
 - Updated commit messages to match these changes, plus some slight rewording here and there.
+- Matched `dev_info` string convention in property driver quirks.
 
 ## v0.2.2
 

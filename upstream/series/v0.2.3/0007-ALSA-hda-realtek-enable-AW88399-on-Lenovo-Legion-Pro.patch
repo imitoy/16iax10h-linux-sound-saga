@@ -166,7 +166,7 @@ index 996fcbc72ae6..e661b20f4ff8 100644
 +	 */
 +	aw88399->channel = 1 - aw88399->channel;
 +	dev_info(aw88399->dev,
-+		 "AW88399 Channel swap applied: index %d -> channel %d\n",
++		 "AW88399: Channel swap applied: index %d -> channel %d\n",
 +		 aw88399->index, aw88399->channel);
 +	return 0;
 +}
@@ -181,7 +181,7 @@ index 996fcbc72ae6..e661b20f4ff8 100644
 +	 * startup status check to avoid false init failures.
 +	 */
 +	aw88399->bsts_unreliable = true;
-+	dev_info(aw88399->dev, "BSTS status check disabled\n");
++	dev_info(aw88399->dev, "AW88399: BSTS status check disabled\n");
 +	return 0;
 +}
 +
