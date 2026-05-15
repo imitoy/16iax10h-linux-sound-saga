@@ -1,15 +1,16 @@
-# Legion Pro 5/7/7i Gen 10 Linux Audio Driver
+# Legion Pro 5i/7/7i Gen 10 Linux Audio Driver
 [![Build Patched Kernel RPMs](https://github.com/marco-giunta/legion-pro7-gen10-audio/actions/workflows/build_kernel.yml/badge.svg?event=workflow_dispatch)](https://github.com/marco-giunta/legion-pro7-gen10-audio/actions/workflows/build_kernel.yml)
 
-> Patched Linux audio drivers for Lenovo Legion Pro 5/7/7i Gen 10 (AMD & Intel). Includes Fedora RPM packages and installation automation. [mt7927 community patch](https://github.com/jetm/mediatek-mt7927-dkms) also included to enable Wi-Fi and Bluetooth on the AMD model.
+> Patched Linux audio drivers for Lenovo Legion Pro 5i/7/7i Gen 10 (AMD & Intel). Includes Fedora RPM packages and installation automation. [mt7927 community patch](https://github.com/jetm/mediatek-mt7927-dkms) also included to enable Wi-Fi and Bluetooth on the AMD model.
 
-Recent Lenovo Legion laptops drive their woofers using the AWDZ88399 Smart Amp via I2C bus as side codecs to a Realtek ALC287 HDA codec, in a setup that requires a driver which currently doesn't exist in the mainline Linux kernel. Due to this, on the current stock Linux kernel, the woofers don't work, and as a result the speakers lack bass and overall sound quiet and tinny.
+Recent Lenovo Legion laptops drive their woofers using the AW88399 Smart Amp via I2C bus as side codecs to a Realtek ALC287 HDA codec, in a setup that requires a driver which currently doesn't exist in the mainline Linux kernel. Due to this, on the current stock Linux kernel, the woofers don't work, and as a result the speakers lack bass and overall sound quiet and tinny.
 This repository provides kernel patches and pre-built RPM packages to restore full audio functionality.
 
 **Supported Models**
 - Lenovo Legion Pro 7i Gen 10 (16IAX10H) - Intel
 - Lenovo Legion Pro 7  Gen 10 (16AFR10H) - AMD
-- *Experimental support*: Legion Pro 5 Gen 10 (16IAX10H) - Intel
+- Lenovo Legion Y9000P (IAX10) - Intel
+- *Experimental support*: Legion Pro 5i Gen 10 (16IAX10H) - Intel
 
 **Models potentially supported but not yet verified** *(matching Windows audio firmware confirmed)*
 - Legion Pro 5 Gen 10 (16AFR10) - AMD
@@ -94,10 +95,10 @@ grep -l "Codec: Realtek" /proc/asound/card*/codec#* | xargs grep -i "Subsystem I
 ```
 You should see a line like `Subsystem Id: 0x17aa<...>`, where `<...>` equals 4 characters. These are the IDs currently supported by the patch:
 - `0x17aa3906`, `0x17aa3907`, `0x17aa3d6c` - Legion Pro 7i Gen 10 / Y9000P 2025 (16IAX10H / IAX10, Intel)
-- `0x17aa3908` - *Experimental support*: Legion Pro 5 (16IAX10H, Intel)
+- `0x17aa3908` - *Experimental support*: Legion Pro 5i (16IAX10H, Intel) (***pin config fix***)
 - `0x17aa3938`, `0x17aa3939` - Legion Pro 7 Gen 10 (16AFR10H, AMD)
 
-If your ID matches one of these, proceed to step 1.
+If your ID matches one of these, proceed to step 1. Note that if your model uses the pin config fix rather than the AW88399 fix (currently only `0x17aa3908`), you do not need to install the `aw88399_acf.bin` firmware in step 1 (you can skip that part).
 
 If your ID is not listed, but your laptop is a `Legion Pro 7 16AFR10H`, `Legion Pro 7i 16IAX10H` or `Legion Pro 5 16IAX10H` (you can confirm this by running `cat /sys/class/dmi/id/product_family`), your Legion has an undiscovered hardware revision. In this case, please open an issue and paste the output of these commands, and I will add the missing SSID to the patch.
 
@@ -350,17 +351,26 @@ On mutable Fedora derivatives such as Nobara, the automated install script will 
 It should be possible to use the patched kernel on immutable distributions by installing the RPMs with `rpm-ostree` instead of `dnf`. However, a proper setup will likely require rebasing your image to include both the patched kernel and the necessary firmware binaries. While the former is likely achievable with `rpm-ostree`, the latter is less straightforward and not something I have explored. Similarly, the steps in the [self-compile guide](docs/self_compile.md) should work if performed inside a container. If you're on a distro like Bazzite, feel free to try it out, and if you do get it working, please open an issue and share what you did so I can update the main guide!
 
 ### Will this patch work on other laptops?
-This patch has two components:
+The aw88399 patch has two components:
 
 1. *AW88399 HDA side codec driver:* The AW88399 is a smart amplifier used to drive the woofers on the supported Legions; in particular, this happens via I2C bus as side codecs to a Realtek ALC287 HDA codec, and this setup requires a driver that is currently missing from the mainline Linux kernel. This part of the patch adds that missing driver, and is in principle useful for any laptop using this chip in this configuration, regardless of manufacturer or model.
 
 2. *PCI subsystem ID quirk:* The kernel needs to know which laptops use this setup in order to load the right driver and firmware at boot. This is done via a quirk entry specific to each laptop model, identified by its PCI subsystem ID. This is the part that must be added on a per-model basis, and is what determines whether a given laptop is "supported" by this patch: without the correct quirk entry, even a laptop that would benefit from the new driver will never use it, because the kernel doesn't know that it is supposed to load it on that specific model.
 
-If your laptop's woofers don't work on Linux, it may be tempting to try this patch, but broken woofers can have many causes, and this patch only fixes this specific hardware configuration. Having said that, if your laptop uses the same AW88399 smart amp in the same configuration, there is a real chance it could benefit from this patch once a quirk entry is added for your model.
+*Pin configuration fix:* On some models (currently the Legion Pro 5i Gen 10), the woofers are disabled not because of a missing driver, but because of a wrong pin configuration set by the BIOS for a speaker node. This is a separate, simpler fix that doesn't require the AW88399 driver or firmware at all.
 
-To check if your laptop contains the AW88399 smart amp chip, follow the steps below (but please note that you may need a more thorough independent hardware investigation). These instructions likely apply mostly to related Lenovo laptops (for example, other Gen 10 Legions, or Legion Pro 7 models from other generations); other models or manufacturers may require more involved ways to extract the required files from the Windows driver.
+If your laptop's woofers don't work on Linux, it may be tempting to try this patch, but broken woofers can have many causes, and this patch only fixes these specific hardware configurations. Having said that, if your laptop uses the same AW88399 smart amp in the same configuration, there is a real chance it could benefit from this patch once a quirk entry is added for your model.
 
-**To check if your laptop uses the AW88399:**
+**Checking which fix may apply to your laptop:**
+
+The most reliable way to check whether your laptop uses the AW88399 is to inspect its ACPI table:
+```bash
+sudo strings /sys/firmware/acpi/tables/DSDT | grep AWDZ8399
+```
+If this returns output, your laptop's firmware explicitly references the AW88399, which is strong evidence it uses the chip. If it returns nothing, your laptop likely does not use the AW88399 as a side codec, even if you find the firmware binary in the Windows driver (some Lenovo audio drivers are multipurpose and bundle firmware for chips not present in every model).
+
+As a secondary check, you can inspect the Windows driver as follows.
+
 1. Download the Windows audio driver for your laptop from the manufacturer's website. For example, you can download Lenovo drivers from [this website](https://pcsupport.lenovo.com).
 2. Install `innoextract`; for example, on Fedora you can use:
 ```bash
@@ -377,6 +387,7 @@ sudo dnf install innoextract
    find . -name "AWDZ8399.bin"
 ```
    If the file is found, your laptop uses the AW88399. As the file may have a different name, even if the `find` command above fails, look around the extracted folders anyway looking for a binary firmware file with a similar name (especially if this binary is inside a folder whose name contains "Awinic").
+   Note that finding this file is a necessary but **not sufficient** condition: some models bundle it in a multipurpose driver without actually using the chip. Always confirm with the ACPI check above.
    
 5. Compute its sha256 checksum:
 ```bash

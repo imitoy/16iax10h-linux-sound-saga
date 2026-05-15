@@ -1,0 +1,36 @@
+diff -rupN linux-7.0.6_patch_series/sound/hda/codecs/realtek/alc269.c linux-7.0.6_patch/sound/hda/codecs/realtek/alc269.c
+--- linux-7.0.6_patch_series/sound/hda/codecs/realtek/alc269.c	2026-05-15 16:53:41.780541394 +0200
++++ linux-7.0.6_patch/sound/hda/codecs/realtek/alc269.c	2026-05-15 17:30:51.434140489 +0200
+@@ -4154,6 +4154,7 @@ enum {
+ 	ALC236_FIXUP_HP_DMIC,
+ 	ALC287_FIXUP_AW88399_I2C_2,
+ 	ALC287_FIXUP_LENOVO_LEGION_AW88399,
++	ALC287_FIXUP_LENOVO_LEGION_PRO_5_16IAX10H,
+ };
+ 
+ /* A special fixup for Lenovo C940 and Yoga Duet 7;
+@@ -6707,6 +6708,16 @@ static const struct hda_fixup alc269_fix
+ 		.chained = true,
+ 		.chain_id = ALC287_FIXUP_AW88399_I2C_2,
+ 	},
++	[ALC287_FIXUP_LENOVO_LEGION_PRO_5_16IAX10H] = {
++		.type = HDA_FIXUP_PINS,
++		.v.pins = (const struct hda_pintbl[]) {
++			{ 0x17, 0x90170111 }, /* fix bass pin wrongly reported as unconnected */
++			{ 0x1d, 0x411111f0 }, /* unused bogus pin */
++			{ }
++		},
++		// .chained = true,
++		// .chain_id = ALC269_FIXUP_LIMIT_INT_MIC_BOOST,
++	},
+ };
+ 
+ static const struct hda_quirk alc269_fixup_tbl[] = {
+@@ -7723,6 +7734,7 @@ static const struct hda_quirk alc269_fix
+ 	SND_PCI_QUIRK(0x17aa, 0x3902, "Lenovo E50-80", ALC269_FIXUP_DMIC_THINKPAD_ACPI),
+ 	SND_PCI_QUIRK(0x17aa, 0x3906, "Legion Pro 7i 16IAX10H", ALC287_FIXUP_LENOVO_LEGION_AW88399),
+ 	SND_PCI_QUIRK(0x17aa, 0x3907, "Legion Pro 7i 16IAX10H", ALC287_FIXUP_LENOVO_LEGION_AW88399),
++	SND_PCI_QUIRK(0x17aa, 0x3908, "Legion Pro 5i 16IAX10H", ALC287_FIXUP_LENOVO_LEGION_PRO_5_16IAX10H),
+ 	SND_PCI_QUIRK(0x17aa, 0x390d, "Lenovo Yoga Pro 7 14ASP10", ALC287_FIXUP_YOGA9_14IAP7_BASS_SPK_PIN),
+ 	SND_PCI_QUIRK(0x17aa, 0x3911, "Lenovo Yoga Pro 7 14IAH10", ALC287_FIXUP_YOGA9_14IAP7_BASS_SPK_PIN),
+ 	SND_PCI_QUIRK(0x17aa, 0x3913, "Lenovo 145", ALC236_FIXUP_LENOVO_INV_DMIC),

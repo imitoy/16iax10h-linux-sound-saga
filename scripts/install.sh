@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 # =============================================================================
-# install.sh - Legion Pro 7/7i Gen 10 patched kernel installer
+# install.sh - Legion Pro 5/7/7i Gen 10 patched kernel installer
 #
 # What this script does:
 #   1. Installs (i.e. copies) the needed firmware files in/lib/firmware
-#      (aw88399 audio firmware; mt7927 Wi-Fi+BT firmware on AMD models only)
+#      (aw88399 audio firmware on models that use it; mt7927 Wi-Fi+BT firmware
+#      on AMD models only)
 #   2. Sets up the akmod-nvidia driver builder (via RPM Fusion)
 #   3. Downloads the latest release tarball from GitHub, verifies its sha256,
 #      then installs the patched kernel RPMs with dnf
@@ -55,6 +56,14 @@ is_amd_model() {
 
 # Prerequisites helpers
 SUPPORTED_SSIDS=("17aa3906" "17aa3907" "17aa3908" "17aa3938" "17aa3939" "17aa3d6c")
+
+# Models that use the AW88399 smart amp and need the firmware.
+# 17aa3908 (Legion Pro 5i 16IAX10H) uses a pin config fix instead and does NOT need it.
+NEEDS_AW88399_FW=("17aa3906" "17aa3907" "17aa3938" "17aa3939" "17aa3d6c")
+
+# Detected SSID, set by require_supported_device and reused later
+DEVICE_SSID=""
+
 require_supported_device() {
     # Check manufacturer
     [[ "$(cat /sys/class/dmi/id/sys_vendor 2>/dev/null)" == "LENOVO" ]] \
@@ -64,11 +73,11 @@ require_supported_device() {
     codec=$(grep -l "Codec: Realtek" /proc/asound/card*/codec#* 2>/dev/null | head -1)
     [[ -z "${codec}" ]] && die "No Realtek audio codec found; unsupported device, automated install aborted."
 
-    ssid=$(grep -i "Subsystem Id" "${codec}" | grep -oP '0x\K[0-9a-f]+')
+    DEVICE_SSID=$(grep -i "Subsystem Id" "${codec}" | grep -oP '0x\K[0-9a-f]+')
 
     for supported in "${SUPPORTED_SSIDS[@]}"; do
-        if [[ "${ssid}" == "${supported}" ]]; then
-            ok "Supported device detected (Subsystem ID: 0x${ssid})"
+        if [[ "${DEVICE_SSID}" == "${supported}" ]]; then
+            ok "Supported device detected (Subsystem ID: 0x${DEVICE_SSID})"
             return 0
         fi
     done
@@ -76,7 +85,7 @@ require_supported_device() {
     # SSID not in supported list -> gather diagnostics before dying
     product_family=$(cat /sys/class/dmi/id/product_family 2>/dev/null)
     warn "Detected device  : ${product_family}"
-    warn "Detected SSID    : 0x${ssid}"
+    warn "Detected SSID    : 0x${DEVICE_SSID}"
     warn ""
     # Exact matches for known supported commercial names -> unknown revision
     if [[ "${product_family}" == "Legion Pro 7 16AFR10H" ]] || \
@@ -84,7 +93,7 @@ require_supported_device() {
        [[ "${product_family}" == "Legion Pro 7 16IAX10H" ]] || \
        [[ "${product_family}" == "Legion Pro 7i 16IAX10H" ]]; then
         warn "Your device appears to be a supported Lenovo Legion Pro 5/7/7i Gen 10 model,"
-        warn "but with a hardware revision (SSID 0x${ssid}) not yet in the patch."
+        warn "but with a hardware revision (SSID 0x${DEVICE_SSID}) not yet in the patch."
         warn "Please open an issue at https://github.com/${GITHUB_REPO}/issues"
         warn "and paste this script's output. This will help add support for your laptop."
     # Substring matches for other potentially compatible models
@@ -105,6 +114,13 @@ require_supported_device() {
         warn "instructions on how to verify this before proceeding with a manual install."
     fi
     die "Unsupported device -> automated install aborted."
+}
+
+needs_aw88399_firmware() {
+    for ssid in "${NEEDS_AW88399_FW[@]}"; do
+        [[ "${ssid}" == "${DEVICE_SSID}" ]] && return 0
+    done
+    return 1
 }
 
 is_fedora_derivative() {
@@ -162,8 +178,10 @@ require_cmd lsusb
 # Step 1: Install firmware
 heading "Step 1: Install the firmware"
 
-# aw88399 audio firmware
-if [[ -f "${AW_FW_DEST}" ]]; then
+# aw88399 audio firmware (only on models that use the AW88399 smart amp)
+if ! needs_aw88399_firmware; then
+    info "Skipping aw88399 firmware install (not needed for this device)."
+elif [[ -f "${AW_FW_DEST}" ]]; then
     ok "aw88399 firmware already present at ${AW_FW_DEST} - skipping."
 else
     info "Downloading aw88399 audio firmware..."
@@ -270,7 +288,7 @@ sudo dnf install --nogpgcheck -y \
 ok "Kernel RPMs installed."
 
 # Step 4: post install
-heading "Step 4 - Building NVIDIA driver module"
+heading "Step 4: Build the NVIDIA driver module"
 
 if is_fedora_derivative; then
     warn "Skipping akmods build on non-vanilla Fedora."

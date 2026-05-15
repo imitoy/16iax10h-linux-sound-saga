@@ -6,6 +6,16 @@ I can then try adding support for your machine by including its PCI ID, but I ma
 
 ---
 
+## Before you begin: confirm your laptop uses the AW88399
+
+Finding `AWDZ8399.bin` in the Windows driver is a necessary but **not sufficient** condition for needing the AW88399 fix: some Lenovo audio drivers are multipurpose and bundle firmware for chips not present in every model. Before opening an issue, confirm your laptop actually uses the AW88399 by running:
+
+```bash
+sudo strings /sys/firmware/acpi/tables/DSDT | grep AWDZ8399
+```
+
+If this returns output, your laptop's ACPI firmware references the AW88399 and you are likely on the right track. If it returns nothing, your woofers are broken for a different reason - possibly a pin configuration issue like the one affecting the Legion Pro 5i Gen 10. In that case, please still open an issue, but make sure to mention that the ACPI check returned nothing, and include the full codec dump from the required information section below.
+
 ## Required basic information
 
 Your issue *must* include the following basic information:
@@ -17,6 +27,7 @@ Your issue *must* include the following basic information:
 ```bash
 cat /sys/class/dmi/id/sys_vendor
 cat /sys/class/dmi/id/product_family
+cat /sys/class/dmi/id/product_name
 ```
 
 - Your subsystem ID, which you can find by running:
