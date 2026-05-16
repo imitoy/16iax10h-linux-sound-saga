@@ -1,22 +1,27 @@
-# Legion Pro 5i/7/7i Gen 10 Linux Audio Driver
+# Legion Pro 7/7i Gen 10 Linux Audio Driver
 [![Build Patched Kernel RPMs](https://github.com/marco-giunta/legion-pro7-gen10-audio/actions/workflows/build_kernel.yml/badge.svg?event=workflow_dispatch)](https://github.com/marco-giunta/legion-pro7-gen10-audio/actions/workflows/build_kernel.yml)
 
-> Patched Linux audio drivers for Lenovo Legion Pro 5i/7/7i Gen 10 (AMD & Intel). Includes Fedora RPM packages and installation automation. [mt7927 community patch](https://github.com/jetm/mediatek-mt7927-dkms) also included to enable Wi-Fi and Bluetooth on the AMD model.
+> Patched Linux audio drivers for Lenovo Legion Pro 7/7i Gen 10 (AMD & Intel). Includes Fedora RPM packages and installation automation. [mt7927 community patch](https://github.com/jetm/mediatek-mt7927-dkms) also included to enable Wi-Fi and Bluetooth on the AMD model.
 
 Recent Lenovo Legion laptops drive their woofers using the AW88399 Smart Amp via I2C bus as side codecs to a Realtek ALC287 HDA codec, in a setup that requires a driver which currently doesn't exist in the mainline Linux kernel. Due to this, on the current stock Linux kernel, the woofers don't work, and as a result the speakers lack bass and overall sound quiet and tinny.
-This repository provides kernel patches and pre-built RPM packages to restore full audio functionality.
 
-**Supported Models**
+Other Legion models have simpler issues such as needing a mic boost calibration quirk or simply some software EQ rather than a kernel fix.
+
+This repository provides kernel patches and pre-built RPM packages for the models that need a custom kernel, and documentation for those that don't.
+
+**Supported Models** *(AW88399 smart amp fix)*
 - Lenovo Legion Pro 7i Gen 10 (16IAX10H) - Intel
-- Lenovo Legion Pro 7  Gen 10 (16AFR10H) - AMD
+- Lenovo Legion Pro 7 Gen 10 (16AFR10H) - AMD
 - Lenovo Legion Y9000P (IAX10) - Intel
-- *Experimental support*: Legion Pro 5i Gen 10 (16IAX10H) - Intel
 
-**Models potentially supported but not yet verified** *(matching Windows audio firmware confirmed)*
+**Other models with separate, simpler fixes**
+These models do *not* need a patched kernel, only some software tweaks; see the ["Other Legions" guide](docs/other_legions_guide.md).
+- Legion Pro 5i Gen 10 (16IAX10H) - Intel
 - Legion Pro 5 Gen 10 (16AFR10) - AMD
-- Legion Pro 5 Gen 10 (16IAX10) - Intel
-- Legion 5 Gen 10 (16IAX10/16IAX10H) - Intel
-- Legion 7 Gen 10 (16IAX10/16IAX10H) - Intel
+- Legion 5i/7i Gen 10 (16IAX10) - Intel
+
+**Models potentially supported but not yet verified** *(AW88399 fix likely applies)*
+- Legion Pro 5 Gen 10 AMD regional variants (R9000P 2025, marketed in Asia) - ACPI ID `AWDZ8399` confirmed by users; PCI/ACPI subsystem IDs `17aa:3928`/`17aa:3927` reported [here](https://bugzilla.kernel.org/show_bug.cgi?id=218329#c25).
 
 If you own one of the laptops above, it's quite likely that I can add support for it, but I need more information from the device itself. Please read the "Will this patch work on other laptops?" FAQ entry, then open an issue using the instructions from [this guide](docs/support_new_laptops.md).
 
@@ -95,14 +100,13 @@ grep -l "Codec: Realtek" /proc/asound/card*/codec#* | xargs grep -i "Subsystem I
 ```
 You should see a line like `Subsystem Id: 0x17aa<...>`, where `<...>` equals 4 characters. These are the IDs currently supported by the patch:
 - `0x17aa3906`, `0x17aa3907`, `0x17aa3d6c` - Legion Pro 7i Gen 10 / Y9000P 2025 (16IAX10H / IAX10, Intel)
-- `0x17aa3908` - *Experimental support*: Legion Pro 5i (16IAX10H, Intel) (***pin config fix***)
 - `0x17aa3938`, `0x17aa3939` - Legion Pro 7 Gen 10 (16AFR10H, AMD)
 
-If your ID matches one of these, proceed to step 1. Note that if your model uses the pin config fix rather than the AW88399 fix (currently only `0x17aa3908`), you do not need to install the `aw88399_acf.bin` firmware in step 1 (you can skip that part).
+If your ID matches one of these, proceed to step 1.
 
-If your ID is not listed, but your laptop is a `Legion Pro 7 16AFR10H`, `Legion Pro 7i 16IAX10H` or `Legion Pro 5 16IAX10H` (you can confirm this by running `cat /sys/class/dmi/id/product_family`), your Legion has an undiscovered hardware revision. In this case, please open an issue and paste the output of these commands, and I will add the missing SSID to the patch.
+If your ID is not listed, but your laptop is a `Legion Pro 7 16AFR10H` or `Legion Pro 7i 16IAX10H` (you can confirm this by running `cat /sys/class/dmi/id/product_family`), your Legion has an undiscovered hardware revision. Please open an issue and paste the output of these commands, and I will add the missing SSID to the patch.
 
-If you don't get a matching SSID and your laptop is a different model (or even from a different manufacturer), please check the "Will this patch work on other laptops?" FAQ entry.
+If you don't get a matching SSID and your laptop is a different model, check the "Will this patch work on other laptops?" FAQ entry. If you own a Legion 5i/7i 16IAX10, a Legion Pro 5i 16IAX10H, or a Legion Pro 5 16AFR10, you don't need a patched kernel at all; see the [audio guide for other Legion models](docs/other_legions_guide.md).
 
 1. **Install the firmware**
 - Download the [`aw88399_acf.bin` file](firmware/aw88399/aw88399_acf.bin); alternatively, you can extract the binary yourself from the Windows driver by following the instructions in the [firmware extraction guide](docs/firmware_extraction.md).
@@ -357,46 +361,25 @@ The aw88399 patch has two components:
 
 2. *PCI subsystem ID quirk:* The kernel needs to know which laptops use this setup in order to load the right driver and firmware at boot. This is done via a quirk entry specific to each laptop model, identified by its PCI subsystem ID. This is the part that must be added on a per-model basis, and is what determines whether a given laptop is "supported" by this patch: without the correct quirk entry, even a laptop that would benefit from the new driver will never use it, because the kernel doesn't know that it is supposed to load it on that specific model.
 
-*Pin configuration fix:* On some models (currently the Legion Pro 5i Gen 10), the woofers are disabled not because of a missing driver, but because of a wrong pin configuration set by the BIOS for a speaker node. This is a separate, simpler fix that doesn't require the AW88399 driver or firmware at all.
+If your laptop's woofers don't work on Linux, it may be tempting to try this patch, but broken woofers can have many causes, and this patch only fixes these specific hardware configurations.
 
-If your laptop's woofers don't work on Linux, it may be tempting to try this patch, but broken woofers can have many causes, and this patch only fixes these specific hardware configurations. Having said that, if your laptop uses the same AW88399 smart amp in the same configuration, there is a real chance it could benefit from this patch once a quirk entry is added for your model.
+For example, other Legions in the Gen 10 family only need some easyeffects software magic, as explained in [this guide](docs/other_legions_guide.md).
+
+Having said that, if your laptop uses the same AW88399 smart amp in the same configuration, there is a real chance it could benefit from this patch once a quirk entry is added for your model.
 
 **Checking which fix may apply to your laptop:**
 
-The most reliable way to check whether your laptop uses the AW88399 is to inspect its ACPI table:
+The AW88399 fix in this patch is specifically for laptops that use the AW88399 smart amp as an HDA side codec via I2C bus. The most reliable way to check if your laptop uses this chip is via the ACPI table:
 ```bash
 sudo strings /sys/firmware/acpi/tables/DSDT | grep AWDZ8399
 ```
-If this returns output, your laptop's firmware explicitly references the AW88399, which is strong evidence it uses the chip. If it returns nothing, your laptop likely does not use the AW88399 as a side codec, even if you find the firmware binary in the Windows driver (some Lenovo audio drivers are multipurpose and bundle firmware for chips not present in every model).
+If this returns output, your laptop uses the AW88399 and is a candidate for this fix.
 
-As a secondary check, you can inspect the Windows driver as follows.
+Note that finding `AWDZ8399.bin` in the Windows audio driver is **not** a reliable indicator; some Lenovo drivers are multipurpose and bundle firmware for chips not present in every model. For example, the Legion Pro 5i Gen 10 includes this file in its driver package but does not have the chip. Always use the ACPI check.
 
-1. Download the Windows audio driver for your laptop from the manufacturer's website. For example, you can download Lenovo drivers from [this website](https://pcsupport.lenovo.com).
-2. Install `innoextract`; for example, on Fedora you can use:
-```bash
-sudo dnf install innoextract
-```
-3. Extract the contents of the Windows driver:
-```bash
-   innoextract <driver_installer.exe>
-```
-   This creates a folder called `code$GetExtractPath$` with multiple subfolders.
-   
-4. Navigate to that folder, then search for the firmware file:
-```bash
-   find . -name "AWDZ8399.bin"
-```
-   If the file is found, your laptop uses the AW88399. As the file may have a different name, even if the `find` command above fails, look around the extracted folders anyway looking for a binary firmware file with a similar name (especially if this binary is inside a folder whose name contains "Awinic").
-   Note that finding this file is a necessary but **not sufficient** condition: some models bundle it in a multipurpose driver without actually using the chip. Always confirm with the ACPI check above.
-   
-5. Compute its sha256 checksum:
-```bash
-   sha256sum <path/to/AWDZ8399.bin>
-```
-   Compare this against [`firmware/aw88399/aw88399_acf.bin.sha256`](firmware/aw88399/aw88399_acf.bin.sha256). A match means your laptop uses the exact same firmware, which is a strong indicator the patch will work. A mismatch means your laptop uses a different variant of the chip with different firmware, in which case the patch may still apply, but this is uncharted territory.
-   To be more specific: Awinic drivers [hardcode the firmware name](https://github.com/torvalds/linux/blob/faeab166167f5787719eb8683661fd41a3bb1514/sound/soc/codecs/aw88399.h#L510), even when the actual firmware differs. This means that the driver in this patch will happily use any file called `aw88399_acf.bin` placed in `/lib/firmware`, implying that even a different firmware can potentially work OOTB with this driver (I make no promises before proper testing, though).
-   
-If you do find the `AWDZ8399.bin` firmware, and its checksum matches, please open an issue clearly stating the information collected using [this guide](docs/support_new_laptops.md).
+A simpler non-technical check: look up your model on [Lenovo's psref website](https://psref.lenovo.com) and check the speaker specifications. If there is no mention of a "Smart Amplifier" in the speakers section, the chip is absent. If present, though, still use the ACPI check, because other Lenovo laptops use smart amps from different manufacturers.
+
+If your ACPI check confirms the AW88399, please open an issue using [this guide](docs/support_new_laptops.md).
 
 I can then try adding support for your device by adding its ID (but I make no promises this will work). To be more precise: adding the ID may not be enough, as the Legion Pro 7 models currently supported by this patch also require specific tweaks regarding the realtek codec side, and other fixes may apply to your model. The guide linked above contains informations to collect diagnostics on whether the same quirks apply or not.
 

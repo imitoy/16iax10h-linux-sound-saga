@@ -1,0 +1,32 @@
+From f47f53f6ff6435fc80d566587f8a0a09f4d6586a Mon Sep 17 00:00:00 2001
+From: Marco Giunta <marco_giunta@outlook.it>
+Date: Sat, 16 May 2026 12:45:20 +0200
+Subject: [PATCH] ALSA: hda/realtek: limit internal mic boost on Lenovo Legion
+ Pro 5i 16IAX10H
+
+The Lenovo Legion Pro 5i 16IAX10H (PCI SSID 17aa:3908) needs internal
+microphone boost limiting. Without it, the microphone produces
+distorted audio at higher boost levels.
+
+Signed-off-by: Marco Giunta <marco_giunta@outlook.it>
+---
+ sound/hda/codecs/realtek/alc269.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/sound/hda/codecs/realtek/alc269.c b/sound/hda/codecs/realtek/alc269.c
+index 6d4e8446f63b..531a82223dd6 100644
+--- a/sound/hda/codecs/realtek/alc269.c
++++ b/sound/hda/codecs/realtek/alc269.c
+@@ -7785,6 +7785,7 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x17aa, 0x38fc, "Lenovo Yoga Pro 7 15ASH11", ALC245_FIXUP_BASS_HP_DAC),
+ 	SND_PCI_QUIRK(0x17aa, 0x38fd, "ThinkBook plus Gen5 Hybrid", ALC287_FIXUP_TAS2781_I2C),
+ 	SND_PCI_QUIRK(0x17aa, 0x3902, "Lenovo E50-80", ALC269_FIXUP_DMIC_THINKPAD_ACPI),
++	SND_PCI_QUIRK(0x17aa, 0x3908, "Legion Pro 5i 16IAX10H", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
+ 	SND_PCI_QUIRK(0x17aa, 0x390d, "Lenovo Yoga Pro 7 14ASP10", ALC287_FIXUP_YOGA9_14IAP7_BASS_SPK_PIN),
+ 	SND_PCI_QUIRK(0x17aa, 0x3911, "Lenovo Yoga Pro 7 14IAH10", ALC287_FIXUP_YOGA9_14IAP7_BASS_SPK_PIN),
+ 	SND_PCI_QUIRK(0x17aa, 0x3913, "Lenovo 145", ALC236_FIXUP_LENOVO_INV_DMIC),
+
+base-commit: c19fcfd33d37d7979781ebe6cacc3c3da9ea0f2e
+-- 
+2.54.0
+

@@ -1,6 +1,6 @@
 # How to open an issue to add support for new IDs
 
-If you believe that your laptop could benefit from the driver contained in this patch (i.e. you found the `AWDZ8399.bin` file in the Windows driver with a matching checksum, as described in the readme), open an issue clearly stating the information you can collect with the steps below.
+If the ACPI check described in the README confirms your laptop references the AW88399, open an issue using the steps below.
 
 I can then try adding support for your machine by including its PCI ID, but I make no promises it will work.
 
@@ -14,7 +14,7 @@ Finding `AWDZ8399.bin` in the Windows driver is a necessary but **not sufficient
 sudo strings /sys/firmware/acpi/tables/DSDT | grep AWDZ8399
 ```
 
-If this returns output, your laptop's ACPI firmware references the AW88399 and you are likely on the right track. If it returns nothing, your woofers are broken for a different reason - possibly a pin configuration issue like the one affecting the Legion Pro 5i Gen 10. In that case, please still open an issue, but make sure to mention that the ACPI check returned nothing, and include the full codec dump from the required information section below.
+If this returns output, your laptop's ACPI table references the AW88399 and you are likely on the right track. If it returns nothing, your woofers are broken for a different reason - possibly needing an easyeffects profile like on the Legion Pro 5i Gen 10. In that case, before opening an issue, please try performing the steps in the ["other legions" guide](docs/other_legions_guide.md).
 
 ## Required basic information
 
