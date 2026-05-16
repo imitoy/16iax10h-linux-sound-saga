@@ -15,6 +15,7 @@ used consistently throughout the rest of the driver.
 
 Tested-by: Nadim Kobeissi <nadim@symbolic.software>
 Tested-by: Xia Yun'an <imitoy@imitoy.top>
+Tested-by: Munzir Taha <munzirtaha@gmail.com>
 Signed-off-by: Marco Giunta <marco_giunta@outlook.it>
 ---
  sound/soc/codecs/aw88399-lib.c | 19 ++++++++++++++++---

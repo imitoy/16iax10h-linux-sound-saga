@@ -41,6 +41,7 @@ functions are identical to their originals in aw88399.c.
 
 Tested-by: Nadim Kobeissi <nadim@symbolic.software>
 Tested-by: Xia Yun'an <imitoy@imitoy.top>
+Tested-by: Munzir Taha <munzirtaha@gmail.com>
 Signed-off-by: Marco Giunta <marco_giunta@outlook.it>
 ---
  include/sound/aw88399.h        |  616 +++++++++++++++

@@ -12,6 +12,7 @@
 ```c
 {.id = ALC287_FIXUP_AW88399_I2C_2, .name = "aw88399-i2c-2"},
 ```
+- Added `Tested-by: Munzir Taha <munzirtaha@gmail.com>`.
 - Rebased on commit  `c19fcfd33d37d7979781ebe6cacc3c3da9ea0f2e` from `tiwai/sound`.
 
 ## v0.2.3

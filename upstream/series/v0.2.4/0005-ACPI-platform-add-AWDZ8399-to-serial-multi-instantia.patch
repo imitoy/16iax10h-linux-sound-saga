@@ -14,6 +14,7 @@ IRQ_RESOURCE_AUTO, matching the pattern used by CS35L41 and TAS2781.
 
 Tested-by: Nadim Kobeissi <nadim@symbolic.software>
 Tested-by: Xia Yun'an <imitoy@imitoy.top>
+Tested-by: Munzir Taha <munzirtaha@gmail.com>
 Co-developed-by: Yakov Till <yakov.till@gmail.com>
 Signed-off-by: Yakov Till <yakov.till@gmail.com>
 Signed-off-by: Marco Giunta <marco_giunta@outlook.it>
