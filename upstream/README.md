@@ -5,6 +5,13 @@
 
 # Changelog
 
+## v0.3
+
+- Added a new patch to the series (5/8) to introduce a firmware reload flag (`fw_needs_reload`) for system resume. After system sleep, the smart amp's SRAM loses its DSP firmware configuration (previously loaded at initialization).
+In v<0.3 series, this would cause the first playback after system resume to fail a CRC check; the retry mechanism in `aw88399_start_pa` would then be triggered, re-uploading the firmware on the second attempt and finally succeeding. This sequence produces misleading error-level log messages, and while in practice capable of consistently self-correcting this failure, is technically an improper hijacking of a self-correct mechanism designed for a different purpose.
+The new flag is set by the HDA driver during system suspend and checked by `aw88399_start` in the shared library, causing a proactive full firmware upload on the next playback start. This eliminates the spurious CRC failures and retry cycles after resume without affecting ASoC behavior.
+- Rebased on commit `9b14f636834630e5473ee5020c8289823a481a7` from `tiwai/sound`.
+
 ## v0.2.4
 
 - Reverted the addition of the Pro 5i ID 3908, as that should likely be sent as a separate patch.
@@ -13,7 +20,7 @@
 {.id = ALC287_FIXUP_AW88399_I2C_2, .name = "aw88399-i2c-2"},
 ```
 - Added `Tested-by: Munzir Taha <munzirtaha@gmail.com>`.
-- Rebased on commit  `c19fcfd33d37d7979781ebe6cacc3c3da9ea0f2e` from `tiwai/sound`.
+- Rebased on commit `c19fcfd33d37d7979781ebe6cacc3c3da9ea0f2e` from `tiwai/sound`.
 
 ## v0.2.3
 
