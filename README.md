@@ -12,7 +12,7 @@ This repository provides kernel patches and pre-built RPM packages for the model
 **Supported Models** *(AW88399 smart amp fix)*
 - Lenovo Legion Pro 7i Gen 10 (16IAX10H) - Intel
 - Lenovo Legion Pro 7 Gen 10 (16AFR10H) - AMD
-- Lenovo Legion Y9000P (IAX10) - Intel
+- Lenovo Legion Y9000P 2025 (IAX10) - Intel
 
 **Other models with separate, simpler fixes**
 
