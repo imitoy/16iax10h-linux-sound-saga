@@ -15,6 +15,7 @@ This repository provides kernel patches and pre-built RPM packages for the model
 - Lenovo Legion Y9000P (IAX10) - Intel
 
 **Other models with separate, simpler fixes**
+
 These models do *not* need a patched kernel, only some software tweaks; see the ["Other Legions" guide](docs/other_legions_guide.md).
 - Legion Pro 5i Gen 10 (16IAX10H) - Intel
 - Legion Pro 5 Gen 10 (16AFR10) - AMD
