@@ -27,14 +27,15 @@ A new Kconfig symbol SND_SOC_AW88399_LIB is introduced.
 SND_SOC_AW88399 (the existing ASoC codec) selects it, ensuring no
 change for current users. The HDA side codec driver (introduced
 later in this series) selects the library without pulling in the
-full ASoC codec module, avoiding a build-time dependency that would
-otherwise force the ASoC I2C driver to load on HDA systems. This
-follows the established pattern used by CS35L41 (SND_SOC_CS35L41_LIB)
-for chips with both ASoC and HDA drivers.
+full ASoC codec module. This avoids a build-time dependency on the
+full ASoC driver and follows the established pattern used by CS35L41
+(SND_SOC_CS35L41_LIB) for chips with both ASoC and HDA drivers.
 
-Functions that are called by both the library and the ASoC codec's
-remaining code (DSP control, volume setting, calibration updates,
-mute, and status helpers) are exported from the library.
+Some library functions (DSP control, volume setting, mute,
+calibration updates, profile management, and status helpers) are
+used internally by the library's start/stop sequences but are also
+called directly by the ASoC driver's remaining code.
+These are exported from the library so the ASoC module can access them.
 
 This is a pure code movement with no functional changes. The moved
 functions are identical to their originals in aw88399.c.
