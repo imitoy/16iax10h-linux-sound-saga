@@ -10,8 +10,8 @@ assuming the firmware binary is already present in SRAM.
 After system sleep, the AW88399 loses its SRAM contents. The
 existing start sequence assumes the firmware binary persists from
 initialization and only uploads register configuration and DSP
-config (DSP_FW_UPDATE_OFF). When SRAM is empty, this causes the
-subsequent CRC check to fail, triggering the retry mechanism in
+config (AW88399_DSP_FW_UPDATE_OFF). When SRAM is empty, this causes
+the subsequent CRC check to fail, triggering the retry mechanism in
 aw88399_start_pa which re-uploads the firmware on the second
 attempt.
 
