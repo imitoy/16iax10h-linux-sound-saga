@@ -9,9 +9,8 @@ I2C address when the Device Tree property "awinic,audio-channel" is
 absent.
 
 The original code calls of_property_read_u32 without checking the
-return value. On ACPI systems (which the driver already supports via
-its ACPI match table), the DT property is never present, and
-channel_value is used uninitialized in the assignment to
+return value. On ACPI systems, the DT property is never present,
+and channel_value is used uninitialized in the assignment to
 aw_dev->channel.
 
 Add a fallback that computes the channel as (i2c_addr - 0x34), where
