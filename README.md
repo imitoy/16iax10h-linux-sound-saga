@@ -376,7 +376,7 @@ sudo strings /sys/firmware/acpi/tables/DSDT | grep AWDZ8399
 ```
 If this returns output, your laptop uses the AW88399 and is a candidate for this fix.
 
-Note that finding `AWDZ8399.bin` in the Windows audio driver is **not** a reliable indicator; some Lenovo drivers are multipurpose and bundle firmware for chips not present in every model. For example, the Legion Pro 5i Gen 10 includes this file in its driver package but does not have the chip. Always use the ACPI check.
+Note that finding `AWDZ8399.bin` in the Windows audio driver (using e.g. the `innoextract` package to extract the `.exe` file) is **not** a reliable indicator; some Lenovo drivers are multipurpose and bundle firmware for chips not present in every model. For example, the Legion Pro 5i Gen 10 includes this file in its driver package but does not have the chip. Always use the ACPI check.
 
 A simpler non-technical check: look up your model on [Lenovo's psref website](https://psref.lenovo.com) and check the speaker specifications. If there is no mention of a "Smart Amplifier" in the speakers section, the chip is absent. If present, though, still use the ACPI check, because other Lenovo laptops use smart amps from different manufacturers.
 
