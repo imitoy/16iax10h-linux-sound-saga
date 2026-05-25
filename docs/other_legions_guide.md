@@ -26,24 +26,35 @@ Some models in this family (confirmed on the Legion Pro 5i 16IAX10H; may apply t
 
 If you prefer to implement the proper fix, which will allow you to set the microphone to 100% with no distortion, you can apply the upstream mic boost limit without a custom kernel with one of two methods.
 
-1. Add this boot parameter to grub:
+1. Find the card number of the realtek codec:
+```bash
+grep -l "Codec: Realtek" /proc/asound/card*/codec#*
 ```
-snd_hda_intel.model=limit-mic-boost
+This is important because your device will have at least 2 audio cards (one for audio through the HDMI, one for the laptop's speakers/mic/jack/etc.). You can see all the audio cards using `cat /proc/asound/cards` and then inspect the corresponding `codec#0` file to figure out which one is the realtek codec, or just use the command above.
+
+Typically, Lenovo laptops have card 0 = HDMI and card 1 = realtek codec. For example, on the AMD Pro 7 Gen 10 the above command outputs:
 ```
-You can do this temporarily by quickly and repeatedly pressing ESC during boot, pressing `e`, finding the line that starts with `linux`, and adding the above at the end (remember that the keyboard will be set to US QWERTY). If this works for the current boot, you can make this permanent e.g. by using `grubby` (or whatever method your distro uses):
-```
-sudo grubby --update-kernel=ALL --args=snd_hda_intel.model=limit-mic-boost
+/proc/asound/card1/codec#0
 ```
 
-2. Alternatively, add the following to `/etc/modprobe.d/snd.conf`:
-```bash
-options snd-hda-intel model=limit-mic-boost
+2. Enable the limit mic boost quirk. Note that in the commands below, anytime you see `model=,limit-mic-boost`, the number of commas after the equal sign must match the card number (0 commas for card 0, 1 comma for card 1, etc.).
+
+There are 2 ways to do this:
+
+- By adding this boot parameter to grub:
 ```
-Then run:
-```bash
-sudo dracut --force
+snd_hda_intel.model=,limit-mic-boost
 ```
-and reboot.
+You can do this temporarily by quickly and repeatedly pressing ESC during boot, pressing `e`, finding the line that starts with `linux`, and adding the above at the end (remember that the keyboard will be set to US QWERTY). If this works for the current boot, you can make this permanent e.g. by using `grubby` (or whatever method your distro uses):
+```bash
+sudo grubby --update-kernel=ALL --args=snd_hda_intel.model=,limit-mic-boost
+```
+
+- Alternatively, by creating `/etc/modprobe.d/alsa-model.conf` and copy paste:
+```
+options snd-hda-intel model=,limit-mic-boost
+```
+Then rebooting.
 
 Either option applies the `ALC269_FIXUP_LIMIT_INT_MIC_BOOST` quirk, which limits the microphone boost to usable levels. This fix has been confirmed on the Legion Pro 5i 16IAX10H (as well as all Pro 7 variants with the aw88399) and may work on related models, but is untested on others; your mileage may vary.
 
@@ -54,3 +65,7 @@ If you're curious whether your model could benefit from the full patch, run:
 sudo strings /sys/firmware/acpi/tables/DSDT | grep AWDZ8399
 ```
 If this returns output, your laptop has the same smart amp hardware as the supported Pro 7 models. In that case, see the FAQ entry "Will this patch work on other laptops?" and consider opening an issue.
+
+
+## Credits
+The section above on overriding audio quirks has been adapted from [this guide by github user mike-echo-oscar-whiskey](https://gist.github.com/mike-echo-oscar-whiskey/f24410d0fb81740ecf8def54c6f03949).
