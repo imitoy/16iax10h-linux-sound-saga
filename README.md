@@ -22,7 +22,7 @@ These models do *not* need a patched kernel, only some software tweaks; see the 
 - Legion 5i/7i Gen 10 (16IAX10) - Intel
 
 **Models potentially supported but not yet verified** *(AW88399 fix likely applies)*
-- Legion Pro 5 Gen 10 AMD regional variants (R9000P 2025, marketed in Asia) - ACPI ID `AWDZ8399` confirmed by users; PCI/ACPI subsystem IDs `17aa:3928`/`17aa:3927` reported [here](https://bugzilla.kernel.org/show_bug.cgi?id=218329#c25).
+- Legion Pro 5 Gen 10 AMD regional variants (R9000P 2025, marketed in Asia) - ACPI ID `AWDZ8399` confirmed by users; codec/ACPI subsystem IDs `17aa:3928`/`17aa:3927` reported [here](https://bugzilla.kernel.org/show_bug.cgi?id=218329#c25).
 
 If you own one of the laptops above, it's quite likely that I can add support for it, but I need more information from the device itself. Please read the "Will this patch work on other laptops?" FAQ entry, then open an issue using the instructions from [this guide](docs/support_new_laptops.md).
 
@@ -100,7 +100,7 @@ Check your SSID:
 grep -l "Codec: Realtek" /proc/asound/card*/codec#* | xargs grep -i "Subsystem Id"
 ```
 You should see a line like `Subsystem Id: 0x17aa<...>`, where `<...>` equals 4 characters. These are the IDs currently supported by the patch:
-- `0x17aa3906`, `0x17aa3907`, `0x17aa3d6c` - Legion Pro 7i Gen 10 / Y9000P 2025 (16IAX10H / IAX10, Intel)
+- `0x17aa3906`, `0x17aa3907` - Legion Pro 7i Gen 10 / Y9000P 2025 (16IAX10H / IAX10, Intel)
 - `0x17aa3938`, `0x17aa3939` - Legion Pro 7 Gen 10 (16AFR10H, AMD)
 
 If your ID matches one of these, proceed to step 1.
@@ -360,7 +360,7 @@ The aw88399 patch has two components:
 
 1. *AW88399 HDA side codec driver:* The AW88399 is a smart amplifier used to drive the woofers on the supported Legions; in particular, this happens via I2C bus as side codecs to a Realtek ALC287 HDA codec, and this setup requires a driver that is currently missing from the mainline Linux kernel. This part of the patch adds that missing driver, and is in principle useful for any laptop using this chip in this configuration, regardless of manufacturer or model.
 
-2. *PCI subsystem ID quirk:* The kernel needs to know which laptops use this setup in order to load the right driver and firmware at boot. This is done via a quirk entry specific to each laptop model, identified by its PCI subsystem ID. This is the part that must be added on a per-model basis, and is what determines whether a given laptop is "supported" by this patch: without the correct quirk entry, even a laptop that would benefit from the new driver will never use it, because the kernel doesn't know that it is supposed to load it on that specific model.
+2. *codec subsystem ID quirk:* The kernel needs to know which laptops use this setup in order to load the right driver and firmware at boot. This is done via a quirk entry specific to each laptop model, identified by its codec subsystem ID. This is the part that must be added on a per-model basis, and is what determines whether a given laptop is "supported" by this patch: without the correct quirk entry, even a laptop that would benefit from the new driver will never use it, because the kernel doesn't know that it is supposed to load it on that specific model.
 
 If your laptop's woofers don't work on Linux, it may be tempting to try this patch, but broken woofers can have many causes, and this patch only fixes these specific hardware configurations.
 
