@@ -5,6 +5,18 @@
 
 # Changelog
 
+## v0.3.2
+
+- Moved printing of the `AWDZ8399` ACPI SSID to the "bound to HDA codec" message in the HDA bind function.
+- Changed device to `aw88399->dev` and print message to more closely match the cs35l41 hda side codec driver:
+```c
+dev_info(aw88399->dev,
+		 "AW88399 Bound - channel %d, AWDZ8399 ACPI SSID %s\n",
+		 aw88399->channel, aw88399->acpi_subsystem_id);
+```
+- Removed ACPI SSID print redundant with the above from the property driver.
+- Rebased on commit `c784d0e6a62abbd2af58bbbe2d20f88dd550e3eb` from `tiwai/sound`.
+
 ## v0.3.1
 
 - Added experimental support for Legion R9000P ADR10 (asian variant of the Pro 5 AMD that includes the aw88399 smart amp driving separate woofers, unlike the western variant which has only 2 speakers). 
