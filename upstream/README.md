@@ -5,6 +5,11 @@
 
 # Changelog
 
+## v0.3.3
+
+- Removed the generic aw88399 fixup from the `alc269_fixup_models` table to match the conventions of the cs35l41 and tas2781.
+- Rebased on commit `d765dc14b9ebff5f1155aaf1eedffc576ee5a596` from `tiwai/sound`.
+
 ## v0.3.2
 
 - Moved printing of the `AWDZ8399` ACPI SSID to the "bound to HDA codec" message in the HDA bind function.
