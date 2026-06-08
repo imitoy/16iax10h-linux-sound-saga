@@ -13,6 +13,7 @@ This repository provides kernel patches and pre-built RPM packages for the model
 - Lenovo Legion Pro 7i Gen 10 (16IAX10H) - Intel
 - Lenovo Legion Pro 7 Gen 10 (16AFR10H) - AMD
 - Lenovo Legion Y9000P 2025 (IAX10) - Intel
+- Lenovo Legion R9000P 2025 (ADR10) - AMD
 
 **Other models with separate, simpler fixes**
 
@@ -20,11 +21,6 @@ These models do *not* need a patched kernel, only some software tweaks; see the 
 - Legion Pro 5i Gen 10 (16IAX10H) - Intel
 - Legion Pro 5 Gen 10 (16AFR10) - AMD
 - Legion 5i/7i Gen 10 (16IAX10) - Intel
-
-**Models potentially supported but not yet verified** *(AW88399 fix likely applies)*
-- Legion Pro 5 Gen 10 AMD regional variants (R9000P 2025, marketed in Asia) - ACPI ID `AWDZ8399` confirmed by users; codec/ACPI subsystem IDs `17aa:3928`/`17aa:3927` reported [here](https://bugzilla.kernel.org/show_bug.cgi?id=218329#c25).
-
-If you own one of the laptops above, it's quite likely that I can add support for it, but I need more information from the device itself. Please read the "Will this patch work on other laptops?" FAQ entry, then open an issue using the instructions from [this guide](docs/support_new_laptops.md).
 
 Other Legion models may also benefit from this patch despite being currently unsupported; for example, [Nadim's repo](https://github.com/nadimkobeissi/16iax10h-linux-sound-saga) contains some examples of this. To check if this patch applies to your laptop (Lenovo Legion or otherwise), read step 0 of the "manual install" section and the "Will this patch work on other laptops?" FAQ entry below.
 
@@ -101,11 +97,12 @@ grep -l "Codec: Realtek" /proc/asound/card*/codec#* | xargs grep -i "Subsystem I
 ```
 You should see a line like `Subsystem Id: 0x17aa<...>`, where `<...>` equals 4 characters. These are the IDs currently supported by the patch:
 - `0x17aa3906`, `0x17aa3907` - Legion Pro 7i Gen 10 / Y9000P 2025 (16IAX10H / IAX10, Intel)
+- `0x17aa3927`, `0x17aa3928` - Legion R9000P 2025 (ADR10, AMD)
 - `0x17aa3938`, `0x17aa3939` - Legion Pro 7 Gen 10 (16AFR10H, AMD)
 
 If your ID matches one of these, proceed to step 1.
 
-If your ID is not listed, but your laptop is a `Legion Pro 7 16AFR10H` or `Legion Pro 7i 16IAX10H` (you can confirm this by running `cat /sys/class/dmi/id/product_family`), your Legion has an undiscovered hardware revision. Please open an issue and paste the output of these commands, and I will add the missing SSID to the patch.
+If your ID is not listed, but your laptop is one of the above models (you can confirm this by running `cat /sys/class/dmi/id/product_family`), your Legion has an undiscovered hardware revision. Please open an issue and paste the output of these commands, and I will add the missing SSID to the patch.
 
 If you don't get a matching SSID and your laptop is a different model, check the "Will this patch work on other laptops?" FAQ entry. If you own a Legion 5i/7i 16IAX10, a Legion Pro 5i 16IAX10H, or a Legion Pro 5 16AFR10, you don't need a patched kernel at all; see the [audio guide for other Legion models](docs/other_legions_guide.md).
 

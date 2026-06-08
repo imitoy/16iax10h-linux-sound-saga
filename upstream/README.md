@@ -19,7 +19,7 @@ dev_info(aw88399->dev,
 
 ## v0.3.1
 
-- Added experimental support for Legion R9000P ADR10 (asian variant of the Pro 5 AMD that includes the aw88399 smart amp driving separate woofers, unlike the western variant which has only 2 speakers). 
+- Added ~~experimental~~ support for Legion R9000P ADR10 (asian variant of the Pro 5 AMD that includes the aw88399 smart amp driving separate woofers, unlike the western variant which has only 2 speakers).
 This is done by enabling the same realtek/property driver quirks as done for the Pro 7 models currently supported, but with a small twist: the PCI SSID of this device is `0x17aa:38bb`, which is already present in `alc269.c` (`"Yoga S780-14.5 Air AMD quad AAC"`). Therefore, the codec SSID (`0x17aa:3927/3928`) is used via `HDA_CODEC_QUIRK`, and put before `38bb` (an exception to the usual sorting of this table) to prevent matching the wrong quirk before the right one is reached by the loop in `snd_hda_pick_fixup`.
 - Reworked quirk matching for all other devices. Before, `SND_PCI_QUIRK` was used for every legion.
 For the AMD models, this was slightly improper, because the codec SSID were passed, but it still worked in practice because there were no matches to the PCI SSID of these devices in `alc269.c` (`17aa:38c6`), so the `q = hda_quirk_lookup_id(codec_vendor, codec_device, quirk);` fallback in `snd_hda_pick_fixup` faced no problems.
