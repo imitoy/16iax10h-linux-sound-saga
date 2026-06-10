@@ -229,7 +229,7 @@ While headphones are plugged in the jack port, if both music is playing and the 
 - Use a jack to usb adapter, as the usb ports use different electronics and are unaffected by this issue;
 - Install easyeffects and import my [echo canceling profile](easyeffects/echo_canceling.json), which is designed to approximate what I think Windows is doing. On one hand, this profile completely kills off the echo, but on the other, voice clarity and words intellegibility decrease compared to when there is no sound being played during the recording. In simple scenarios, the overall performance should be acceptable; however, please be aware that results may vary, especially if the easyeffects profile is being stacked on top of other software with independent signal processing (e.g. discord's default noise canceling/autogain settings). You're welcome to experiment with different easyeffects settings (if you find a better solution, please open an issue and let me know), but if the performance isn't up to par for your use case, it's probably easier to just rely on a usb adapter.
 
-If you want to use easyeffects, I recommend using the flatpak version, as it already comes with all the necessary plugins and is guaranteed to be up to date (e.g. Fedora still ships the old GTK version). 
+If you want to use easyeffects, I recommend using the flatpak version, as it already comes with all the necessary plugins and is guaranteed to be up to date (the Fedora package, instead, tends to lag behind). 
 While easyeffects is running, you will see devices called "Easy Effects Sink" and "Easy Effects Source" pop up in your sound settings; do *not* select them, as easyeffects is designed to automatically hijack the default devices.
 
 ### Improved speakers loudness
