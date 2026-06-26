@@ -118,7 +118,11 @@ If this doesn't return "OK", it means either file got corrupted in the download.
 ```bash
 sudo cp -f aw88399_acf.bin /lib/firmware/aw88399_acf.bin
 ```
-- If you own the AMD model and wish to enable Wi-Fi and Bluetooth using jetm's [mt7927 patch](https://github.com/jetm/mediatek-mt7927-dkms), also install [BT_RAM_CODE_MT6639_2_1_hdr.bin](firmware/mt7927/BT_RAM_CODE_MT6639_2_1_hdr.bin), [WIFI_MT6639_PATCH_MCU_2_1_hdr.bin](firmware/mt7927/WIFI_MT6639_PATCH_MCU_2_1_hdr.bin), and [WIFI_RAM_CODE_MT6639_2_1.bin](firmware/mt7927/WIFI_RAM_CODE_MT6639_2_1.bin):
+- If you own the AMD model and wish to enable Wi-Fi and Bluetooth using jetm's [mt7927 patch](https://github.com/jetm/mediatek-mt7927-dkms), you will also need the MediaTek WiFi/BT firmware binaries. These files have been submitted to the `linux-firmware` repository alongside jetm's kernel submission:
+  - **WiFi firmware** (`WIFI_MT6639_PATCH_MCU_2_1_hdr.bin`, `WIFI_RAM_CODE_MT6639_2_1.bin`): [accepted upstream](https://gitlab.com/kernel-firmware/linux-firmware/-/merge_requests/1055) and already shipped by Fedora's `linux-firmware` package as `.bin.xz` files. Check if you already have `/lib/firmware/mediatek/mt7927/WIFI_MT6639_PATCH_MCU_2_1_hdr.bin.xz` and `/lib/firmware/mediatek/mt7927/WIFI_RAM_CODE_MT6639_2_1.bin.xz` (running `dnf update` may be needed first); if you do, you don't need to install these files manually.
+  - **Bluetooth firmware** (`BT_RAM_CODE_MT6639_2_1_hdr.bin`): [not yet accepted upstream](https://gitlab.com/kernel-firmware/linux-firmware/-/merge_requests/946), so this still needs to be installed manually.
+
+  For the Bluetooth file (and the WiFi files if not already present), [download them from this repo](firmware/mt7927), then verify and install them:
 ```bash
 # check sha256 checksums
 sha256sum -c BT_RAM_CODE_MT6639_2_1_hdr.bin.sha256

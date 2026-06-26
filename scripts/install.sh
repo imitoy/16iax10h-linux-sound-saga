@@ -187,6 +187,18 @@ if is_amd_model; then
         DEST_DIR="${entry##*:}"
         DEST="${DEST_DIR}/${FNAME}"
 
+        if [[ -f "${DEST}.xz" ]]; then
+            # Official compressed firmware is present - prefer it
+            if [[ -f "${DEST}" ]]; then
+                info "Switching ${FNAME} to official firmware package - removing previously installed copy..."
+                sudo rm -f "${DEST}"
+                ok "Removed ${DEST} (official compressed version available at ${DEST}.xz)"
+            else
+                ok "${FNAME}: official firmware already present as ${FNAME}.xz - skipping."
+            fi
+            continue
+        fi
+
         if [[ -f "${DEST}" ]]; then
             ok "${FNAME} already present - skipping."
             continue
