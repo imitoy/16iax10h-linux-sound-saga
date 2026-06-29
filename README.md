@@ -1,5 +1,6 @@
 # Legion Pro 7/7i Gen 10 Linux Audio Driver
 [![Build Patched Kernel RPMs](https://github.com/marco-giunta/legion-pro7-gen10-audio/actions/workflows/build_kernel.yml/badge.svg?event=workflow_dispatch)](https://github.com/marco-giunta/legion-pro7-gen10-audio/actions/workflows/build_kernel.yml)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/marco-giunta/legion-pro7-gen10-audio/total?&logo=github&logoColor=white&label=Downloads&labelColor=%231a1a2e&color=%232196f3)
 
 > Patched Linux audio drivers for Lenovo Legion Pro 7/7i Gen 10 (AMD & Intel). Includes Fedora RPM packages and installation automation. [mt7927 community patch](https://github.com/jetm/mediatek-mt7927-dkms) also included to enable Wi-Fi and Bluetooth on the AMD model.
 
