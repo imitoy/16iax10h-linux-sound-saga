@@ -4817,7 +4817,7 @@ diff -rupN linux-7.1.2/sound/soc/codecs/aw88399-lib.c linux-7.1.2_patch_series/s
 +		 * from I2C address: 0x34 -> channel 0 (left), 0x35 -> channel 1 (right)
 +		 */
 +		aw_dev->channel = aw_dev->i2c->addr - 0x34;
-+		dev_info(aw_dev->dev,
++		dev_dbg(aw_dev->dev,
 +			"DT channel property not found, using I2C address-based channel %d (addr 0x%02x)\n",
 +			aw_dev->channel, aw_dev->i2c->addr);
 +		return;

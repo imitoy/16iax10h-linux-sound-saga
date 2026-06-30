@@ -8,7 +8,7 @@
 ## v0.4
 
 - Added a new patch 6/9 to the series to introduce a channel setter function to the shared library (`aw88399_dev_set_channel`). This allows for the removal of the last remaining cross-directory dependency on ASoC-internal headers from the HDA driver (`#include "../../soc/codecs/aw88395/aw88395_device.h"`) by replacing `core->aw_pa->channel = aw88399->channel` with its opaque handler equivalent `aw88399_dev_set_channel(core, aw88399->channel)`.
-- Reduced `dmesg` verbosity by turning a bunch of `dev_info` calls in the HDA and property drivers into `dev_dbg`. The "downgraded" messages are those related to ACPI, codec remove and unbind, and the application of quirk functions. `dev_info` calls are left for the success messages that are relevant to the user and appear only once (following the cs35l41 pattern):
+- Reduced `dmesg` verbosity by turning a bunch of `dev_info` calls in the HDA and property drivers into `dev_dbg`. The "downgraded" messages are those related to ACPI, codec remove and unbind, and the application of quirk functions (as well as the "missing DT properties" message). `dev_info` calls are left for the success messages that are relevant to the user and appear only once (following the cs35l41 pattern):
 ```c
 dev_info(dev, "AW88399 HDA side codec registered successfully\n");
 dev_info(aw88399->dev,
