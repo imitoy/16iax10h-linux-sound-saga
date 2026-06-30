@@ -5,6 +5,22 @@
 
 # Changelog
 
+## v0.4
+
+- Added a new patch 6/9 to the series to introduce a channel setter function to the shared library (`aw88399_dev_set_channel`). This allows for the removal of the last remaining cross-directory dependency on ASoC-internal headers from the HDA driver (`#include "../../soc/codecs/aw88395/aw88395_device.h"`) by replacing `core->aw_pa->channel = aw88399->channel` with its opaque handler equivalent `aw88399_dev_set_channel(core, aw88399->channel)`.
+- Reduced `dmesg` verbosity by turning a bunch of `dev_info` calls in the HDA and property drivers into `dev_dbg`. The "downgraded" messages are those related to ACPI, codec remove and unbind, and the application of quirk functions. `dev_info` calls are left for the success messages that are relevant to the user and appear only once (following the cs35l41 pattern):
+```c
+dev_info(dev, "AW88399 HDA side codec registered successfully\n");
+dev_info(aw88399->dev,
+		 "AW88399 Bound - channel %d, AWDZ8399 ACPI SSID %s\n",
+		 aw88399->channel, aw88399->acpi_subsystem_id);
+dev_info(aw88399->dev, "AW88399: Picked up properties for ACPI SSID %s\n",
+		 aw88399->acpi_subsystem_id);
+```
+- Slightly changed the string printed by the property driver's `dev_info` call.
+- Modified the comment about the R9000P's shared PCI ID to match the preexisting conventions in `alc269.c` for devices with one shared PCI ID and multiple unique codec IDs (`"Yoga Pro 7 14IMH9"`, `Yoga Pro 7 14IRH8`).
+- Rebased on commit `bcb8896e30a3cd684af57a16df0111f4ab4baf59` from `tiwai/sound`.
+
 ## v0.3.3
 
 - Removed the generic aw88399 fixup from the `alc269_fixup_models` table to match the conventions of the cs35l41 and tas2781.
