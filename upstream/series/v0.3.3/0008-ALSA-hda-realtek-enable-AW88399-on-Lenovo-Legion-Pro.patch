@@ -3,6 +3,8 @@ From: Marco Giunta <marco_giunta@outlook.it>
 Date: Fri, 29 May 2026 10:25:36 +0200
 Subject: [PATCH 8/8] ALSA: hda/realtek: enable AW88399 on Lenovo Legion Pro
 
+[Adapted for Arch Linux kernel 7.0.3 - regenerated with corrected context]
+
 Enable audio output through the AW88399 woofer amplifiers on Lenovo
 Legion laptops by adding the necessary Realtek ALC287 fixups and
 AW88399 property quirks.
@@ -59,24 +61,20 @@ Signed-off-by: Yakov Till <yakov.till@gmail.com>
 Signed-off-by: Marco Giunta <marco_giunta@outlook.it>
 ---
  sound/hda/codecs/realtek/alc269.c             | 47 +++++++++++++++++++
- .../codecs/side-codecs/aw88399_hda_property.c | 42 +++++++++++++++++
- 2 files changed, 89 insertions(+)
+ .../codecs/side-codecs/aw88399_hda_property.c | 28 +++++++++++
+ 2 files changed, 75 insertions(+)
 
-diff --git a/sound/hda/codecs/realtek/alc269.c b/sound/hda/codecs/realtek/alc269.c
-index 78a865709635..db88fa9309ab 100644
---- a/sound/hda/codecs/realtek/alc269.c
-+++ b/sound/hda/codecs/realtek/alc269.c
-@@ -3254,6 +3254,33 @@ static void find_cirrus_companion_amps(struct hda_codec *cdc)
+@@ -3254,6 +3254,33 @@
  	comp_generic_fixup(cdc, HDA_FIXUP_ACT_PRE_PROBE, bus, acpi_ids[i].hid, match, count);
  }
-
+ 
 +static void aw88399_fixup_i2c_two(struct hda_codec *cdc, const struct hda_fixup *fix, int action)
 +{
 +	comp_generic_fixup(cdc, action, "i2c", "AWDZ8399", "-%s:00-aw88399-hda.%d", 2);
 +}
 +
 +static void alc287_fixup_legion_16iax10h_aw88399(struct hda_codec *codec,
-+						 const struct hda_fixup *fix, int action)
++					 const struct hda_fixup *fix, int action)
 +{
 +	static const struct hda_pintbl pincfgs[] = {
 +		{ 0x1d, 0x411111f0 }, /* unused bogus pin */
@@ -97,23 +95,22 @@ index 78a865709635..db88fa9309ab 100644
 +		break;
 +	}
 +}
-+
  static void cs35l41_fixup_i2c_two(struct hda_codec *cdc, const struct hda_fixup *fix, int action)
  {
  	comp_generic_fixup(cdc, action, "i2c", "CSC3551", "-%s:00-cs35l41-hda.%d", 2);
-@@ -4124,6 +4151,8 @@ enum {
+@@ -4124,6 +4151,8 @@
  	ALC245_FIXUP_ACER_MICMUTE_LED,
  	ALC245_FIXUP_CS35L41_I2C_2_MUTE_LED,
  	ALC236_FIXUP_HP_DMIC,
 +	ALC287_FIXUP_AW88399_I2C_2,
 +	ALC287_FIXUP_LENOVO_LEGION_AW88399,
  };
-
+ 
  /* A special fixup for Lenovo C940 and Yoga Duet 7;
-@@ -6667,6 +6696,16 @@ static const struct hda_fixup alc269_fixups[] = {
+@@ -6667,6 +6696,16 @@
  			{ }
  		},
- 	},
+ 	}
 +	[ALC287_FIXUP_AW88399_I2C_2] = {
 +		.type = HDA_FIXUP_FUNC,
 +		.v.func = aw88399_fixup_i2c_two,
@@ -125,9 +122,9 @@ index 78a865709635..db88fa9309ab 100644
 +		.chain_id = ALC287_FIXUP_AW88399_I2C_2,
 +	},
  };
-
+ 
  static const struct hda_quirk alc269_fixup_tbl[] = {
-@@ -7658,6 +7697,8 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
+@@ -7658,6 +7697,8 @@
  	SND_PCI_QUIRK(0x17aa, 0x38b8, "Yoga S780-14.5 proX AMD YC Dual", ALC287_FIXUP_TAS2781_I2C),
  	SND_PCI_QUIRK(0x17aa, 0x38b9, "Yoga S780-14.5 proX AMD LX Dual", ALC287_FIXUP_TAS2781_I2C),
  	SND_PCI_QUIRK(0x17aa, 0x38ba, "Yoga S780-14.5 Air AMD quad YC", ALC287_FIXUP_TAS2781_I2C),
@@ -136,7 +133,7 @@ index 78a865709635..db88fa9309ab 100644
  	SND_PCI_QUIRK(0x17aa, 0x38bb, "Yoga S780-14.5 Air AMD quad AAC", ALC287_FIXUP_TAS2781_I2C),
  	SND_PCI_QUIRK(0x17aa, 0x38be, "Yoga S980-14.5 proX YC Dual", ALC287_FIXUP_TAS2781_I2C),
  	SND_PCI_QUIRK(0x17aa, 0x38bf, "Yoga S980-14.5 proX LX Dual", ALC287_FIXUP_TAS2781_I2C),
-@@ -7680,6 +7719,8 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
+@@ -7680,6 +7721,8 @@
  	SND_PCI_QUIRK(0x17aa, 0x38fa, "Thinkbook 16P Gen5", ALC287_FIXUP_MG_RTKC_CSAMP_CS35L41_I2C_THINKPAD),
  	SND_PCI_QUIRK(0x17aa, 0x38fd, "ThinkBook plus Gen5 Hybrid", ALC287_FIXUP_TAS2781_I2C),
  	SND_PCI_QUIRK(0x17aa, 0x3902, "Lenovo E50-80", ALC269_FIXUP_DMIC_THINKPAD_ACPI),
@@ -145,7 +142,7 @@ index 78a865709635..db88fa9309ab 100644
  	SND_PCI_QUIRK(0x17aa, 0x390d, "Lenovo Yoga Pro 7 14ASP10", ALC287_FIXUP_YOGA9_14IAP7_BASS_SPK_PIN),
  	SND_PCI_QUIRK(0x17aa, 0x3911, "Lenovo Yoga Pro 7 14IAH10", ALC287_FIXUP_YOGA9_14IAP7_BASS_SPK_PIN),
  	SND_PCI_QUIRK(0x17aa, 0x3913, "Lenovo 145", ALC236_FIXUP_LENOVO_INV_DMIC),
-@@ -7688,6 +7729,8 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
+@@ -7688,6 +7731,8 @@
  	SND_PCI_QUIRK(0x17aa, 0x3920, "Yoga S990-16 pro Quad VECO Quad", ALC287_FIXUP_TXNW2781_I2C),
  	SND_PCI_QUIRK(0x17aa, 0x3929, "Thinkbook 13x Gen 5", ALC287_FIXUP_MG_RTKC_CSAMP_CS35L41_I2C_THINKPAD),
  	SND_PCI_QUIRK(0x17aa, 0x392b, "Thinkbook 13x Gen 5", ALC287_FIXUP_MG_RTKC_CSAMP_CS35L41_I2C_THINKPAD),
@@ -154,7 +151,7 @@ index 78a865709635..db88fa9309ab 100644
  	SND_PCI_QUIRK(0x17aa, 0x3977, "IdeaPad S210", ALC283_FIXUP_INT_MIC),
  	SND_PCI_QUIRK(0x17aa, 0x3978, "Lenovo B50-70", ALC269_FIXUP_DMIC_THINKPAD_ACPI),
  	SND_PCI_QUIRK(0x17aa, 0x3bf8, "Quanta FL1", ALC269_FIXUP_PCM_44K),
-@@ -7974,6 +8017,7 @@ static const struct hda_model_fixup alc269_fixup_models[] = {
+@@ -7974,6 +8019,7 @@
  	{.id = ALC236_FIXUP_LENOVO_INV_DMIC, .name = "alc236-fixup-lenovo-inv-mic"},
  	{.id = ALC2XX_FIXUP_HEADSET_MIC, .name = "alc2xx-fixup-headset-mic"},
  	{.id = ALC245_FIXUP_BASS_HP_DAC, .name = "alc245-fixup-bass-hp-dac"},
@@ -162,14 +159,11 @@ index 78a865709635..db88fa9309ab 100644
  	{}
  };
  #define ALC225_STANDARD_PINS \
-diff --git a/sound/hda/codecs/side-codecs/aw88399_hda_property.c b/sound/hda/codecs/side-codecs/aw88399_hda_property.c
-index 8684f263c6c0..fb783b152702 100644
---- a/sound/hda/codecs/side-codecs/aw88399_hda_property.c
-+++ b/sound/hda/codecs/side-codecs/aw88399_hda_property.c
+
 @@ -10,6 +10,27 @@
  #include <linux/string.h>
  #include "aw88399_hda_property.h"
-
+ 
 +static int aw88399_swap_channels(struct aw88399_hda *aw88399)
 +{
 +	aw88399->channel = 1 - aw88399->channel;
@@ -195,7 +189,7 @@ index 8684f263c6c0..fb783b152702 100644
  	const char *ssid;
  	int (*add_prop)(struct aw88399_hda *aw88399);
 @@ -17,6 +38,12 @@
-
+ 
  static const struct aw88399_prop_model aw88399_prop_model_table[] = {
  	{}
 +	{ "17AA3906", aw88399_apply_legion_quirks },
@@ -205,7 +199,7 @@ index 8684f263c6c0..fb783b152702 100644
 +	{ "17AA3938", aw88399_apply_legion_quirks },
 +	{ "17AA3939", aw88399_apply_legion_quirks },
  };
-
+ 
  int aw88399_add_properties(struct aw88399_hda *aw88399)
 
 -- 
