@@ -1,4 +1,4 @@
-From 055ff15020006acaa8d0b3e9a7100b78aca32569 Mon Sep 17 00:00:00 2001
+From 65754e58de485a05983585fc1c541d4c040ef2dc Mon Sep 17 00:00:00 2001
 From: Marco Giunta <marco_giunta@outlook.it>
 Date: Tue, 30 Jun 2026 20:18:38 +0200
 Subject: [PATCH 5/9] ASoC: aw88399: add firmware reload flag for resume
@@ -48,7 +48,7 @@ index 54090f3233aa..9aeb2a113214 100644
  
  int aw_dev_check_syspll(struct aw_device *aw_dev);
 diff --git a/sound/soc/codecs/aw88399-lib.c b/sound/soc/codecs/aw88399-lib.c
-index d01a67e4dc12..bfaed1324550 100644
+index 822dd41dc6b7..a306b7df6393 100644
 --- a/sound/soc/codecs/aw88399-lib.c
 +++ b/sound/soc/codecs/aw88399-lib.c
 @@ -1173,12 +1173,15 @@ void aw88399_start(struct aw88399 *aw88399, bool sync_start)

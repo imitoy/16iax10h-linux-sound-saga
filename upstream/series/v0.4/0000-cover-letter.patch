@@ -1,4 +1,4 @@
-From 772b336a995ec81dbe3ecd32675b13370418483b Mon Sep 17 00:00:00 2001
+From b83de52284de5d301b789259467ab3a45e6ae1c0 Mon Sep 17 00:00:00 2001
 From: Marco Giunta <marco_giunta@outlook.it>
 Date: Tue, 30 Jun 2026 20:52:24 +0200
 Subject: [PATCH 0/9] ALSA: hda: Add AW88399 HDA side codec driver for Lenovo Legion
@@ -13,7 +13,7 @@ quiet and tinny audio.
 
 An ASoC driver for the AW88399 already exists in-tree
 (sound/soc/codecs/aw88399.c), contributed by AWINIC, but it targets
-I2S/TDM topologies and cannot drive the chip when it sits behind an
+ASoC topologies and cannot drive the chip when it sits behind an
 HDA controller. This series adds a proper HDA side codec driver,
 following the established pattern used by the CS35L41 and TAS2781
 drivers.
@@ -65,7 +65,7 @@ https://github.com/nadimkobeissi/16iax10h-linux-sound-saga
 Marco Giunta (9):
   ASoC: aw88399: extract shared device library
   ASoC: aw88399: check return values in aw_dev_check_sram
-  ASoC: aw88399: derive channel from I2C address on ACPI  systems
+  ASoC: aw88399: derive channel from I2C address on ACPI systems
   ASoC: aw88399: add per-instance BSTS status bypass flag
   ASoC: aw88399: add firmware reload flag for resume
   ASoC: aw88399: add channel setter for HDA side codec
@@ -86,10 +86,10 @@ Marco Giunta (9):
  .../codecs/side-codecs/aw88399_hda_property.h |   17 +
  sound/soc/codecs/Kconfig                      |    5 +
  sound/soc/codecs/Makefile                     |    2 +
- sound/soc/codecs/aw88399-lib.c                | 1401 +++++++++++++++++
+ sound/soc/codecs/aw88399-lib.c                | 1400 +++++++++++++++++
  sound/soc/codecs/aw88399.c                    | 1327 ----------------
  sound/soc/codecs/aw88399.h                    |  582 +------
- 16 files changed, 2803 insertions(+), 1907 deletions(-)
+ 16 files changed, 2802 insertions(+), 1907 deletions(-)
  create mode 100644 include/sound/aw88399.h
  create mode 100644 sound/hda/codecs/side-codecs/aw88399_hda.c
  create mode 100644 sound/hda/codecs/side-codecs/aw88399_hda.h

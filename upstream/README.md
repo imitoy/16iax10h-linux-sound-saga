@@ -19,6 +19,8 @@ dev_info(aw88399->dev, "AW88399: Picked up properties for ACPI SSID %s\n",
 ```
 - Slightly changed the string printed by the property driver's `dev_info` call.
 - Modified the comment about the R9000P's shared PCI ID to match the preexisting conventions in `alc269.c` for devices with one shared PCI ID and multiple unique codec IDs (`"Yoga Pro 7 14IMH9"`, `Yoga Pro 7 14IRH8`).
+- Removed `dev_dbg(aw_dev->dev, "DT channel value: %d\n", channel_value);` after the I2C fallback as adding diagnostics for the ASoC driver is out of scope (that line is harmless but not strictly needed).
+- Slightly reworded parts of the cover letter.
 - Rebased on commit `bcb8896e30a3cd684af57a16df0111f4ab4baf59` from `tiwai/sound`.
 
 ## v0.3.3

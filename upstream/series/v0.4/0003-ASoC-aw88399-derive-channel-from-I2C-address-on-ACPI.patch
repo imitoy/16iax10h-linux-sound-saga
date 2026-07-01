@@ -1,7 +1,7 @@
-From 1fbd9d3b58320c23053d7b6bdc7bff6ca1ace50f Mon Sep 17 00:00:00 2001
+From 261f1ce2a0a66862de05dc348030c7890c4d9cf5 Mon Sep 17 00:00:00 2001
 From: Marco Giunta <marco_giunta@outlook.it>
 Date: Tue, 30 Jun 2026 20:17:45 +0200
-Subject: [PATCH 3/9] ASoC: aw88399: derive channel from I2C address on ACPI 
+Subject: [PATCH 3/9] ASoC: aw88399: derive channel from I2C address on ACPI
  systems
 
 Extend aw88399_parse_channel_dt to derive the audio channel from the
@@ -27,14 +27,14 @@ Co-developed-by: Yakov Till <yakov.till@gmail.com>
 Signed-off-by: Yakov Till <yakov.till@gmail.com>
 Signed-off-by: Marco Giunta <marco_giunta@outlook.it>
 ---
- sound/soc/codecs/aw88399-lib.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ sound/soc/codecs/aw88399-lib.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
 diff --git a/sound/soc/codecs/aw88399-lib.c b/sound/soc/codecs/aw88399-lib.c
-index 6fc3963c014b..4ed9b332dd1d 100644
+index 6fc3963c014b..8d1ef3538ede 100644
 --- a/sound/soc/codecs/aw88399-lib.c
 +++ b/sound/soc/codecs/aw88399-lib.c
-@@ -1317,9 +1317,22 @@ static void aw88399_parse_channel_dt(struct aw_device *aw_dev)
+@@ -1317,8 +1317,20 @@ static void aw88399_parse_channel_dt(struct aw_device *aw_dev)
  {
  	struct device_node *np = aw_dev->dev->of_node;
  	u32 channel_value;
@@ -54,10 +54,8 @@ index 6fc3963c014b..4ed9b332dd1d 100644
 +		return;
 +	}
  	aw_dev->channel = channel_value;
-+	dev_dbg(aw_dev->dev, "DT channel value: %d\n", channel_value);
  }
  
- int aw88399_init(struct aw88399 *aw88399, struct i2c_client *i2c, struct regmap *regmap)
 -- 
 2.54.0
 

@@ -1,4 +1,4 @@
-From 570fa54db17fde13697e5a968959b25db37bc431 Mon Sep 17 00:00:00 2001
+From 2c29b759f7fed2f2658248ce0776f20212d5ca1a Mon Sep 17 00:00:00 2001
 From: Marco Giunta <marco_giunta@outlook.it>
 Date: Tue, 30 Jun 2026 20:16:34 +0200
 Subject: [PATCH 1/9] ASoC: aw88399: extract shared device library

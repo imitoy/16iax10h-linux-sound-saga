@@ -1,4 +1,4 @@
-From a513e9eb506a1d0f05e35d9a141d741670cd978c Mon Sep 17 00:00:00 2001
+From cb95d42688b10b4b857e607f55498201250fe4ed Mon Sep 17 00:00:00 2001
 From: Marco Giunta <marco_giunta@outlook.it>
 Date: Tue, 30 Jun 2026 20:18:08 +0200
 Subject: [PATCH 4/9] ASoC: aw88399: add per-instance BSTS status bypass flag
@@ -44,7 +44,7 @@ index cbc69ad12684..54090f3233aa 100644
  
  int aw_dev_check_syspll(struct aw_device *aw_dev);
 diff --git a/sound/soc/codecs/aw88399-lib.c b/sound/soc/codecs/aw88399-lib.c
-index 4ed9b332dd1d..d01a67e4dc12 100644
+index 8d1ef3538ede..822dd41dc6b7 100644
 --- a/sound/soc/codecs/aw88399-lib.c
 +++ b/sound/soc/codecs/aw88399-lib.c
 @@ -156,8 +156,9 @@ int aw_dev_check_syspll(struct aw_device *aw_dev)

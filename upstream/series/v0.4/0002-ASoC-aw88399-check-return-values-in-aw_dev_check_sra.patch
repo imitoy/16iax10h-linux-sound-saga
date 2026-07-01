@@ -1,4 +1,4 @@
-From fedf3f10a113f8ba078e8c8b1ffbc483619b89a6 Mon Sep 17 00:00:00 2001
+From b27ccc061a227719a7bfabbd5ab825688b00d5d9 Mon Sep 17 00:00:00 2001
 From: Marco Giunta <marco_giunta@outlook.it>
 Date: Tue, 30 Jun 2026 20:17:16 +0200
 Subject: [PATCH 2/9] ASoC: aw88399: check return values in aw_dev_check_sram

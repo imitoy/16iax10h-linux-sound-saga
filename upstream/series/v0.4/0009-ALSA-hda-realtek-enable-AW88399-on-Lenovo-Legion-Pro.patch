@@ -1,4 +1,4 @@
-From 772b336a995ec81dbe3ecd32675b13370418483b Mon Sep 17 00:00:00 2001
+From b83de52284de5d301b789259467ab3a45e6ae1c0 Mon Sep 17 00:00:00 2001
 From: Marco Giunta <marco_giunta@outlook.it>
 Date: Tue, 30 Jun 2026 20:47:39 +0200
 Subject: [PATCH 9/9] ALSA: hda/realtek: enable AW88399 on Lenovo Legion Pro
@@ -166,7 +166,7 @@ index 21ab891fcb47..ca879f847cbf 100644
  };
  #define ALC225_STANDARD_PINS \
 diff --git a/sound/hda/codecs/side-codecs/aw88399_hda_property.c b/sound/hda/codecs/side-codecs/aw88399_hda_property.c
-index 8684f263c6c0..9e516f59e4bb 100644
+index 5eb42ea08076..07cb7be41887 100644
 --- a/sound/hda/codecs/side-codecs/aw88399_hda_property.c
 +++ b/sound/hda/codecs/side-codecs/aw88399_hda_property.c
 @@ -10,12 +10,54 @@

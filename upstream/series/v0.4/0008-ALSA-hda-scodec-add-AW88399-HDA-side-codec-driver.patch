@@ -1,4 +1,4 @@
-From afca9f452a7a11de96c7577d40d0beadc89dbccd Mon Sep 17 00:00:00 2001
+From 8372095356ee363cba1926dc2f242de1f4145218 Mon Sep 17 00:00:00 2001
 From: Marco Giunta <marco_giunta@outlook.it>
 Date: Tue, 30 Jun 2026 20:43:37 +0200
 Subject: [PATCH 8/9] ALSA: hda/scodec: add AW88399 HDA side codec driver
@@ -719,7 +719,7 @@ index 000000000000..d0d39eda6bbd
 +MODULE_IMPORT_NS("SND_HDA_SCODEC_AW88399");
 diff --git a/sound/hda/codecs/side-codecs/aw88399_hda_property.c b/sound/hda/codecs/side-codecs/aw88399_hda_property.c
 new file mode 100644
-index 000000000000..8684f263c6c0
+index 000000000000..5eb42ea08076
 --- /dev/null
 +++ b/sound/hda/codecs/side-codecs/aw88399_hda_property.c
 @@ -0,0 +1,35 @@

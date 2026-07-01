@@ -3475,8 +3475,8 @@ diff -rupN linux-7.1.2/sound/soc/codecs/aw88399.h linux-7.1.2_patch_series/sound
 +#endif /* __AW88399_H__ */
 diff -rupN linux-7.1.2/sound/soc/codecs/aw88399-lib.c linux-7.1.2_patch_series/sound/soc/codecs/aw88399-lib.c
 --- linux-7.1.2/sound/soc/codecs/aw88399-lib.c	1970-01-01 01:00:00.000000000 +0100
-+++ linux-7.1.2_patch_series/sound/soc/codecs/aw88399-lib.c	2026-06-30 21:44:15.706157204 +0200
-@@ -0,0 +1,1401 @@
++++ linux-7.1.2_patch_series/sound/soc/codecs/aw88399-lib.c	2026-07-01 05:16:07.873119157 +0200
+@@ -0,0 +1,1400 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
 + * aw88399-lib.c --  AW88399 Common functions for ASoC and HDA audio drivers
@@ -4817,13 +4817,12 @@ diff -rupN linux-7.1.2/sound/soc/codecs/aw88399-lib.c linux-7.1.2_patch_series/s
 +		 * from I2C address: 0x34 -> channel 0 (left), 0x35 -> channel 1 (right)
 +		 */
 +		aw_dev->channel = aw_dev->i2c->addr - 0x34;
-+		dev_dbg(aw_dev->dev,
++		dev_info(aw_dev->dev,
 +			"DT channel property not found, using I2C address-based channel %d (addr 0x%02x)\n",
 +			aw_dev->channel, aw_dev->i2c->addr);
 +		return;
 +	}
 +	aw_dev->channel = channel_value;
-+	dev_dbg(aw_dev->dev, "DT channel value: %d\n", channel_value);
 +}
 +
 +int aw88399_init(struct aw88399 *aw88399, struct i2c_client *i2c, struct regmap *regmap)

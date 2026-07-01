@@ -1,4 +1,4 @@
-From 188d082411cab29e37bf2631dca8e925b4e2eead Mon Sep 17 00:00:00 2001
+From 63c52128fa8a65979b82fa752b95dd7a4550e0dc Mon Sep 17 00:00:00 2001
 From: Marco Giunta <marco_giunta@outlook.it>
 Date: Tue, 30 Jun 2026 20:32:45 +0200
 Subject: [PATCH 7/9] ACPI/platform: add AWDZ8399 to serial-multi-instantiate

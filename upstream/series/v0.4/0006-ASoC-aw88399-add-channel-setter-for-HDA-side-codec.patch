@@ -1,4 +1,4 @@
-From daa0a2656a0976a5c9e686fdf8d388a182dbb2f1 Mon Sep 17 00:00:00 2001
+From 4e15068d2765478d9b7926dfd63fdc40135ac504 Mon Sep 17 00:00:00 2001
 From: Marco Giunta <marco_giunta@outlook.it>
 Date: Tue, 30 Jun 2026 20:30:36 +0200
 Subject: [PATCH 6/9] ASoC: aw88399: add channel setter for HDA side codec
@@ -36,10 +36,10 @@ index 9aeb2a113214..9160a7231d98 100644
  int aw88399_request_firmware_file(struct aw88399 *aw88399);
  void aw88399_start(struct aw88399 *aw88399, bool sync_start);
 diff --git a/sound/soc/codecs/aw88399-lib.c b/sound/soc/codecs/aw88399-lib.c
-index bfaed1324550..5f78076a5691 100644
+index a306b7df6393..76d87d079da5 100644
 --- a/sound/soc/codecs/aw88399-lib.c
 +++ b/sound/soc/codecs/aw88399-lib.c
-@@ -1391,5 +1391,11 @@ int aw88399_init(struct aw88399 *aw88399, struct i2c_client *i2c, struct regmap
+@@ -1390,5 +1390,11 @@ int aw88399_init(struct aw88399 *aw88399, struct i2c_client *i2c, struct regmap
  }
  EXPORT_SYMBOL_GPL(aw88399_init);
  
