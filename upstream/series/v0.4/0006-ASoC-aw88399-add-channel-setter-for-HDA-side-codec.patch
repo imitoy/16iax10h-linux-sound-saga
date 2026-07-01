@@ -3,7 +3,7 @@ From: Marco Giunta <marco_giunta@outlook.it>
 Date: Tue, 30 Jun 2026 20:30:36 +0200
 Subject: [PATCH 6/9] ASoC: aw88399: add channel setter for HDA side codec
 
-Add aw88399_set_channel() to the shared library so that the HDA side
+Add aw88399_dev_set_channel() to the shared library so that the HDA side
 codec driver can set the amplifier's channel assignment without
 including the aw88395 device header directly.
 
