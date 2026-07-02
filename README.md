@@ -1,5 +1,6 @@
 # Legion Pro 7/7i Gen 10 Linux Audio Driver
 [![Build Patched Kernel RPMs](https://github.com/marco-giunta/legion-pro7-gen10-audio/actions/workflows/build_kernel.yml/badge.svg?event=workflow_dispatch)](https://github.com/marco-giunta/legion-pro7-gen10-audio/actions/workflows/build_kernel.yml)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/marco-giunta/legion-pro7-gen10-audio/total?&logo=github&logoColor=white&label=Downloads&labelColor=%231a1a2e&color=%232196f3)
 
 > Patched Linux audio drivers for Lenovo Legion Pro 7/7i Gen 10 (AMD & Intel). Includes Fedora RPM packages and installation automation. [mt7927 community patch](https://github.com/jetm/mediatek-mt7927-dkms) also included to enable Wi-Fi and Bluetooth on the AMD model.
 
@@ -40,7 +41,7 @@ More detailed credits are available at the bottom of this page.
 - **[mt7927 community patch](https://github.com/jetm/mediatek-mt7927-dkms)** to enable Wi-Fi and Bluetooth on the AMD model
 - **easyeffects profiles** to restore some Windows-like features
 
-***AI disclaimer:*** Especially in the earlier stages of this project, I relied on claude.ai for help with things I didn't fully understand; as I learned more about Linux and audio, I became more confident and less reliant on those tools. I can attest that ***all the code I added to the original patch was written by me, based on existing Linux code and documentation*** (see e.g. [here](https://github.com/nadimkobeissi/16iax10h-linux-sound-saga/issues/30#issuecomment-4176726805) and [here](https://github.com/nadimkobeissi/16iax10h-linux-sound-saga/issues/55#issue-4343077194)). Likewise, ***the guides and tools in this repo were written and tested by me, based on official Fedora documentation***.
+***AI disclaimer:*** Especially in the earlier stages of this project, I relied on claude.ai for help with things I didn't fully understand; as I learned more about Linux and audio, I became more confident and less reliant on those tools. I can attest that ***all the code I added to the original patch was written by me, based on existing Linux code and documentation*** (see e.g. [here](https://github.com/nadimkobeissi/16iax10h-linux-sound-saga/issues/30#issuecomment-4176726805) and [here](https://github.com/nadimkobeissi/16iax10h-linux-sound-saga/issues/55)). Likewise, ***the guides and tools in this repo were written and tested by me, based on official Fedora documentation***.
 I still use AI for brainstorming or assistance with bugs; for example, Claude helped me fix or improve some parts of the GitHub Actions pipeline and the install script. These changes were limited to bugfixes or minor improvements; the overall logic and design are my own. Most importantly, it had no role in writing the actual kernel patch code.
 More generally, Claude was part of how I learned (alongside reading documentation and experimenting on my hardware), but the end result reflects my own understanding and work. Therefore, while everything distributed in this repository is human-written, I think it's only fair to acknowledge the role LLMs played in getting there.
 
@@ -102,7 +103,7 @@ You should see a line like `Subsystem Id: 0x17aa<...>`, where `<...>` equals 4 c
 
 If your ID matches one of these, proceed to step 1.
 
-If your ID is not listed, but your laptop is one of the above models (you can confirm this by running `cat /sys/class/dmi/id/product_family`), your Legion has an undiscovered hardware revision. Please open an issue and paste the output of these commands, and I will add the missing SSID to the patch.
+If your ID is not listed, but your laptop is one of the above models (you can confirm this by running `cat /sys/class/dmi/id/product_family`) *and* it contains the aw88399 chip (check if `sudo strings /sys/firmware/acpi/tables/DSDT | grep AWDZ8399` returns output), your Legion has an undiscovered hardware revision. Please open an issue and paste the output of these commands, and I will add the missing SSID to the patch.
 
 If you don't get a matching SSID and your laptop is a different model, check the "Will this patch work on other laptops?" FAQ entry. If you own a Legion 5i/7i 16IAX10, a Legion Pro 5i 16IAX10H, or a Legion Pro 5 16AFR10, you don't need a patched kernel at all; see the [audio guide for other Legion models](docs/other_legions_guide.md).
 
@@ -252,9 +253,8 @@ Please notice that, if you have the AMD model, the same
 ```
 CONFIG_SND_HDA_SCODEC_AW88399=m
 CONFIG_SND_HDA_SCODEC_AW88399_I2C=m
-CONFIG_SND_SOC_AW88399=m
 ```
-config parameters as for the Intel models are needed, but not the Intel-specific ones; use the AMD specific ones instead. The ones used by Fedora are shown in the table below; however, given that a) not all of them are actually used, b) you also need other audio related parameters (e.g. the alc269 codec), and c) most distros build their kernels with every config already included to maximize hardware compatibility, I recommend you just use the same parameters used to compile the kernel you already have. In practice, this means going to `/boot`, copying the appropriate `config-<kernel version>` file, and appending the `CONFIG_SND_HDA_SCODEC_AW88399=m` and `CONFIG_SND_HDA_SCODEC_AW88399_I2C=m` parameters (`CONFIG_SND_SOC_AW88399=m` will realistically already be there, as well as everything else you need for both the Intel and AMD models).
+config parameters as for the Intel models are needed, but not the Intel-specific ones; use the AMD specific ones instead. The ones used by Fedora are shown in the table below; however, given that a) not all of them are actually used, b) you also need other audio related parameters (e.g. the alc269 codec), and c) most distros build their kernels with every config already included to maximize hardware compatibility, I recommend you just use the same parameters used to compile the kernel you already have. In practice, this means going to `/boot`, copying the appropriate `config-<kernel version>` file, and appending the `CONFIG_SND_HDA_SCODEC_AW88399=m` and `CONFIG_SND_HDA_SCODEC_AW88399_I2C=m` parameters (everything else you need for both the Intel and AMD models will realistically already be there).
 <details>
 <summary>AMD audio config parameters (click here)</summary>
 
