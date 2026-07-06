@@ -5,6 +5,11 @@
 
 # Changelog
 
+## v0.4.1
+
+- Changed some `dev_dbg` and `dev_warn` calls to standardize argument usage to better match the cs35l41 convention. When the `aw88399_hda` struct is passed as an argument or obtained via `dev_get_drvdata(dev)` with device `dev` passed as argument, `aw88399->dev` is used to print messages. If `struct device *dev = aw88399->dev;` is declared as a local variable for convenience from a `aw88399_hda` struct passed as an argument (i.e. when this `dev` is needed multiple times), `dev` is also used directly in the print messages. This change is purely cosmetic, as these variables are identical in content, but it helps to clean things up.
+- Rebased on commit `9dbbdc09418344c150c75a41f349a6441d81dd71` from `tiwai/sound`.
+
 ## v0.4
 
 - Added a new patch 6/9 to the series to introduce a channel setter function to the shared library (`aw88399_dev_set_channel`). This allows for the removal of the last remaining cross-directory dependency on ASoC-internal headers from the HDA driver (`#include "../../soc/codecs/aw88395/aw88395_device.h"`) by replacing `core->aw_pa->channel = aw88399->channel` with its opaque handler equivalent `aw88399_dev_set_channel(core, aw88399->channel)`.
