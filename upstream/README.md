@@ -5,6 +5,32 @@
 
 # Changelog
 
+## v0.4.2
+
+The changes in this version are mostly aimed at cleaning up the i2c driver, with the intent of removing deprecated functionality and ensuring a closer match to the conventions of the cs35l41 and tas2781 i2c drivers. As such, they mostly target patch 8/9.
+
+- Removed unused includes from i2c driver (`<linux/acpi.h>`, `<sound/hda_codec.h>`), so that we now only have 
+```c
+#include <linux/module.h>
+#include <linux/i2c.h>
+#include "aw88399_hda.h"
+```
+fully matching the cirrus driver (after the removal of `#include <linux/mod_devicetable.h>` in commit `995832b2cebe6969d1b42635db698803ee31294d`).
+- Removed `MODULE_DEVICE_TABLE(i2c, aw88399_hda_i2c_id);` after the definition of `static const struct i2c_device_id aw88399_hda_i2c_id[]`, as it's redundant with `MODULE_DEVICE_TABLE(acpi, aw88399_acpi_hda_match);`: before the i2c driver is triggered, the ACPI match table "reacts" to the ACPI HID and creates i2c devices via the SMI driver, i.e. we don't need an independent module autoload from i2c alone without ACPI having already done so. This also fully matches the cs35l41 precedent.
+- Removed matching of manual and SMI devices from `aw88399_hda_i2c_probe`; the former is likely a leftover from the early debugging days (and never used in practice anymore), while the latter is fully redundant with the ACPI match, similarly to the previous point. Once again, this matches the corresponding cs35l41 fully, with the exception that, since we don't have to worry about multiple versions (i.e. ACPI HIDs in practice) of the same chip, the function can be simplified by dropping `const char *device_name;` and inverting the if.
+- In `static const struct i2c_device_id aw88399_hda_i2c_id[]`: removed matching of `aw88399` since only `aw88399-hda` is actually used as per the two i2c devices created by the SMI driver. This also avoids any potential confusion with the i2c driver of the original ASoC aw88399 driver, whose i2c name is indeed `"aw88399"`.
+- In `static const struct i2c_device_id aw88399_hda_i2c_id[]`: added explicit `.name` field and removed default-valued `driver_data` field (0), to match the conventions of the cs35l41 and tas2781 i2c drivers, as well as many other devices (see commit `910714d4e79ba654d8a4e8103bb624d4f62e57f8`).
+- As per the same `910714d4e79b` commit, fixed the spacing convention in the `{ }` terminator at the end of the `aw88399_hda_i2c_id` struct.
+- Fixed the order of the metadata lines (module description, author, etc.) at the end of the i2c driver.
+- Removed file names from the comments at the top of the new drivers, and added Lyapsus' author lines to match the cs35l41 convention (my author line in the property driver was already there).
+- In patch 1/8, slightly edited the top comment to better match the convention of the original ASoC driver.
+
+## v0.4.1
+
+- Changed some `dev_dbg` and `dev_warn` calls to standardize argument usage to better match the cs35l41 convention. When the `aw88399_hda` struct is passed as an argument or obtained via `dev_get_drvdata(dev)` with device `dev` passed as argument, `aw88399->dev` is used to print messages. If `struct device *dev = aw88399->dev;` is declared as a local variable for convenience from a `aw88399_hda` struct passed as an argument (i.e. when this `dev` is needed multiple times), `dev` is also used directly in the print messages. This change is purely cosmetic, as these variables are identical in content, but it helps to clean things up.
+- Made the string printed by the `dev_info` in `aw88399_hda_bind` a bit shorter and more closely aligned to the cs35l41 convention.
+- Rebased on commit `9dbbdc09418344c150c75a41f349a6441d81dd71` from `tiwai/sound`.
+
 ## v0.4
 
 - Added a new patch 6/9 to the series to introduce a channel setter function to the shared library (`aw88399_dev_set_channel`). This allows for the removal of the last remaining cross-directory dependency on ASoC-internal headers from the HDA driver (`#include "../../soc/codecs/aw88395/aw88395_device.h"`) by replacing `core->aw_pa->channel = aw88399->channel` with its opaque handler equivalent `aw88399_dev_set_channel(core, aw88399->channel)`.
